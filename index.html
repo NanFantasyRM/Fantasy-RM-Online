@@ -143,6 +143,13 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 .login .smallbtn{width:100%;padding:12px!important;border:1px solid #ffc85755!important;background:#ffc8570d!important;color:#ffd978!important;font-weight:800}
 .login #onlineState{margin:18px 0 0;padding-top:14px;border-top:1px solid #ffffff12;font-size:11px;color:#7f96b9}
 @media(max-width:520px){.loginbox{width:88vw;padding:30px 22px 24px!important}.loginbox:before{width:62px;height:62px;margin:-62px auto 12px;font-size:30px}.login .logo{font-size:31px}}
+
+/* FantasyRM magic pulse */
+@keyframes rmMagicPulse{0%,100%{filter:drop-shadow(0 0 5px #38a9ff) drop-shadow(0 0 12px #147cff66)}50%{filter:drop-shadow(0 0 11px #7dd7ff) drop-shadow(0 0 28px #168cff) drop-shadow(0 0 44px #245cff88)}}
+@keyframes rmButtonPulse{0%,100%{box-shadow:0 8px 26px #176dff55,0 0 8px #3ab7ff66,inset 0 0 8px #fff1}50%{box-shadow:0 8px 30px #176dff88,0 0 20px #4bc8ff,0 0 38px #176dff88,inset 0 0 14px #8de2ff55}}
+.login .logo{animation:rmMagicPulse 2.4s ease-in-out infinite}
+.login .primary{animation:rmButtonPulse 2.1s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.login .logo,.login .primary{animation:none}}
 </style></head><body>
 <div id="login" class="screen login"><div class="card loginbox"><div class="logo">FANTASY RM ONLINE</div><div class="sub">Idle RPG • Reino de Aetheria</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR ONLINE</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Digite o nome do seu herói e depois escolha uma classe.</p><div class="card" style="padding:14px;margin:14px 0 20px"><label for="heroName" style="display:block;font-weight:800;margin-bottom:7px">Nome do personagem</label><input id="heroName" maxlength="18" autocomplete="off" placeholder="Ex.: Nan Silti" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0b1020;color:white;font-size:16px"><div id="heroNameHint" style="color:var(--muted);font-size:12px;margin-top:6px">3 a 18 caracteres.</div></div><div id="chars" class="chars"></div></div></div>
