@@ -195,7 +195,7 @@ linear-gradient(180deg,transparent,#020611 78%)!important;filter:none!important}
 </style><style>
 /* Combat VFX v4 — projétil nasce no personagem e termina no mob */
 .attackProjectile,.attackTrail{left:0!important;bottom:0!important}
-.attackProjectile{animation:none!important;transition:transform .38s cubic-bezier(.2,.7,.3,1),opacity .38s ease!important}
+.attackProjectile{animation:none!important;transition:left .38s cubic-bezier(.2,.7,.3,1),top .38s cubic-bezier(.2,.7,.3,1),transform .38s ease,opacity .38s ease!important}
 .attackTrail{display:none!important}
 </style><style>
 /* Combat VFX v5 — ancora visualmente o disparo na mão/arma */
@@ -424,14 +424,16 @@ function dungeonWin(){let b=dungeonBosses[D.bossIndex];if(D.bar>1){D.bar--;P.hp=
 function leaveDungeon(){D.active=false;P.hp=P.hpMax;P.mp=P.mpMax;spawn();renderDungeon();update();toast('Você saiu da Dungeon.')}
 function attackVisual(skillName){let battle=document.querySelector('.battle');if(!battle||!P)return;let cls=P.cls||'',name=(skillName||'').toLowerCase(),icon='💥',kind='magic',color='#ffd45d';if(cls==='Arqueiro'){icon='➶';kind='arrow';color='#8dffbd'}else if(cls==='Mago'){icon=name.includes('gelo')||name.includes('zero')?'❄️':name.includes('raio')?'⚡':'🔥';kind='magic';color=name.includes('gelo')||name.includes('zero')?'#7ee7ff':name.includes('raio')?'#b77cff':'#ff713d'}else if(cls==='Assassino'){icon='⚔️';kind='melee';color='#d58cff'}else if(cls==='Guerreiro'){icon='⚔️';kind='melee';color='#ffd45d'}if(name.includes('cura')||name.includes('bênção')||name.includes('santuário')||name.includes('purificação')){icon='✨';kind='magic';color='#8dffbd'}let p=document.createElement('div');p.className='attackProjectile '+kind;p.textContent=icon;p.style.setProperty('--pc',color);battle.appendChild(p);
 let br=battle.getBoundingClientRect(),hr=runner.getBoundingClientRect(),mr=mob?.getBoundingClientRect();
-/* runner usa bottom/transform e o glifo não ocupa visualmente toda a caixa.
-   Ancoramos o disparo no ponto visível da arma, próximo à base direita do herói. */
-let sx=hr.left-br.left+hr.width*.82,sy=hr.bottom-br.top-hr.height*.16;
-let ex=mr?mr.left-br.left+mr.width*.28:sx+220,ey=mr?mr.top-br.top+mr.height*.58:sy;
-p.style.left='0px';p.style.top='0px';p.style.bottom='auto';
-p.style.transform='translate('+sx+'px,'+sy+'px)';
+/* Coordenadas locais reais: .battle tem borda e o projétil absoluto usa padding-box.
+   Compensamos clientLeft/clientTop e o tamanho do próprio projétil para o centro nascer na mão. */
+let pw=p.offsetWidth||34,ph=p.offsetHeight||34;
+let sx=hr.left-br.left-battle.clientLeft+hr.width*.78-pw*.5;
+let sy=hr.top-br.top-battle.clientTop+hr.height*.62-ph*.5;
+let ex=mr?mr.left-br.left-battle.clientLeft+mr.width*.28-pw*.5:sx+220;
+let ey=mr?mr.top-br.top-battle.clientTop+mr.height*.55-ph*.5:sy;
+p.style.left=sx+'px';p.style.top=sy+'px';p.style.bottom='auto';p.style.transform='none';
 if(kind==='melee'){p.style.transitionDuration='.28s'}
-requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.transform='translate('+ex+'px,'+ey+'px) '+(kind==='melee'?'rotate(35deg) scale(1.2)':'scale(1.12)');p.style.opacity='.15'}));
+requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.left=ex+'px';p.style.top=ey+'px';p.style.transform=kind==='melee'?'rotate(35deg) scale(1.2)':'scale(1.12)';p.style.opacity='.15'}));
 runner.classList.add('basicAttack');setTimeout(()=>{mob?.classList.add('hitFlash')},260);setTimeout(()=>{p.remove();runner.classList.remove('basicAttack');mob?.classList.remove('hitFlash')},520)}
 function tick(){if(!P||!E)return;let regenS=calcStats();if(P.hp>0){P.hp=Math.min(P.hpMax,P.hp+Number(regenS.hpRegen||0));P.mp=Math.min(P.mpMax,P.mp+Number(regenS.mpRegen||0));}if(coopDungeonViewing&&E?.coop){let id=coopDungeonViewing,life=getOnlineLife('dungeon',id);if(life.deadUntil>Date.now()){P.hp=0;update();return}let S=calcStats(),isCrit=Math.random()*100<S.crit,dmg=adminInstaKill&&isAdmin?100000000:Math.max(1,Math.round(S.atk*(.85+Math.random()*.35)*(isCrit?S.critDmg/100:1)));attackVisual();floatText((isCrit?'CRIT! ':'')+'-'+dmg,isCrit?'#ff9f43':'#ffd45d',72,42);if(!coopAttackLocked)attackCoopDungeon(id,true,dmg);onlineBossStrike('dungeon',id,Number((enemyName.textContent.match(/Fase (\d+)/)||[])[1])||1,E.atk||10,Math.max(0,dungeonBosses.findIndex(b=>b.name===E.name)));P.hp=Math.max(0,Math.round(life.hp));P.mp=Math.max(0,Math.round(life.mp));update();return}processEffects();if(E.hp<=0){win();return}if(Math.random()<.42)castSkillFx();if(E.hp<=0){win();return}let S=calcStats(),isCrit=Math.random()*100<S.crit,armorMult=E.effects.armorBreak?1.28:1;let dmg=adminInstaKill&&isAdmin?Math.max(1,E.hp):Math.max(1,Math.round((S.atk*(P.buff.atk?1.3:1))*armorMult*(.8+Math.random()*.4)*(isCrit?S.critDmg/100:1)));attackVisual();E.hp-=dmg;floatText((isCrit?'CRIT! ':'')+'-'+dmg,isCrit?'#ff9f43':'#ffd45d',72,42);P.mp=Math.min(P.mpMax,P.mp+2);if(E.hp<=0){win();return}if(E.effects.stun){floatText('ATORDOADO!','#ffe56b',70,31);update();return}if(Math.random()*100<S.dodge){floatText('ESQUIVA!','#8be9fd',26,42);update();return}let slow=E.effects.freeze?.slow||E.effects.slow?.slow||0;if(slow&&Math.random()<slow){floatText('LENTO','#7ee7ff',70,31);update();return}let rawDef=S.def*(P.buff.def?1.35:1),mit=rawDef/(rawDef+Math.max(35,E.atk*3.2)),ed=adminGodMode&&isAdmin?0:Math.max(2,Math.round(E.atk*(1-mit)*(.88+Math.random()*.24)));P.hp-=ed;floatText('-'+ed,'#ff657a',26,42);if(P.hp<=0)die();update()}
 function win(){if(E.world)return worldWin();if(E.dungeon)return dungeonWin();if(E.boss){normalizeTitles();P.bossKills++;checkTitles();P.stage++;P.kills=0;toast('Boss derrotado! Estágio '+P.stage+' desbloqueado.');gainXp(90+P.stage*12);P.gold+=80+P.stage*10;drop(true)}else{normalizeTitles();P.totalMobKills++;checkTitles();P.kills++;gainXp(22+P.stage*3);P.gold+=8+P.stage; if(Math.random()<.38)drop(false)}P.hp=Math.min(P.hpMax,P.hp+Math.round(P.hpMax*(E.boss?.10:.06)));spawn();update()}
