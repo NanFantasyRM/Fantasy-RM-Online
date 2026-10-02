@@ -197,6 +197,9 @@ linear-gradient(180deg,transparent,#020611 78%)!important;filter:none!important}
 .attackProjectile,.attackTrail{left:0!important;bottom:0!important}
 .attackProjectile{animation:none!important;transition:left .38s cubic-bezier(.2,.7,.3,1),top .38s cubic-bezier(.2,.7,.3,1),transform .38s ease,opacity .38s ease!important}
 .attackTrail{display:none!important}
+</style><style>
+/* Combat VFX v5 — ancora visualmente o disparo na mão/arma */
+.attackProjectile{transform-origin:center center!important}
 </style></head><body>
 <div id="login" class="screen login"><div class="card loginbox"><div class="logo">FantasyRM</div><div class="sub">Idle RPG • Reino de Aetheria</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Digite o nome do seu herói e depois escolha uma classe.</p><div class="card" style="padding:14px;margin:14px 0 20px"><label for="heroName" style="display:block;font-weight:800;margin-bottom:7px">Nome do personagem</label><input id="heroName" maxlength="18" autocomplete="off" placeholder="Ex.: Nan Silti" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0b1020;color:white;font-size:16px"><div id="heroNameHint" style="color:var(--muted);font-size:12px;margin-top:6px">3 a 18 caracteres.</div></div><div id="chars" class="chars"></div></div></div>
@@ -421,7 +424,7 @@ function dungeonWin(){let b=dungeonBosses[D.bossIndex];if(D.bar>1){D.bar--;P.hp=
 function leaveDungeon(){D.active=false;P.hp=P.hpMax;P.mp=P.mpMax;spawn();renderDungeon();update();toast('Você saiu da Dungeon.')}
 function attackVisual(skillName){let battle=document.querySelector('.battle');if(!battle||!P)return;let cls=P.cls||'',name=(skillName||'').toLowerCase(),icon='💥',kind='magic',color='#ffd45d';if(cls==='Arqueiro'){icon='➶';kind='arrow';color='#8dffbd'}else if(cls==='Mago'){icon=name.includes('gelo')||name.includes('zero')?'❄️':name.includes('raio')?'⚡':'🔥';kind='magic';color=name.includes('gelo')||name.includes('zero')?'#7ee7ff':name.includes('raio')?'#b77cff':'#ff713d'}else if(cls==='Assassino'){icon='⚔️';kind='melee';color='#d58cff'}else if(cls==='Guerreiro'){icon='⚔️';kind='melee';color='#ffd45d'}if(name.includes('cura')||name.includes('bênção')||name.includes('santuário')||name.includes('purificação')){icon='✨';kind='magic';color='#8dffbd'}let p=document.createElement('div');p.className='attackProjectile '+kind;p.textContent=icon;p.style.setProperty('--pc',color);battle.appendChild(p);
 let br=battle.getBoundingClientRect(),hr=runner.getBoundingClientRect(),mr=mob?.getBoundingClientRect();
-let sx=hr.left-br.left+hr.width*.72,sy=hr.top-br.top+hr.height*.48;
+let sx=hr.left-br.left+hr.width*.72,sy=hr.top-br.top+hr.height*.68;
 let ex=mr?mr.left-br.left+mr.width*.35:sx+220,ey=mr?mr.top-br.top+mr.height*.48:sy;
 p.style.left=sx+'px';p.style.top=sy+'px';p.style.bottom='auto';
 if(kind==='melee'){p.style.transitionDuration='.28s'}
