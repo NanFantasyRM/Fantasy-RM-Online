@@ -159,6 +159,15 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 #game>.top .smallbtn{border-radius:10px!important;background:#0b1830!important;border-color:#5b8cff44!important}
 @media(max-width:700px){#game>.top{margin:7px 7px 0;padding:8px 9px!important;border-radius:13px}#game>.top>b{font-size:14px;white-space:nowrap}#game>.top .currency{gap:4px}#game>.top .currency>span{padding:5px 6px;font-size:10px}#game>.top .smallbtn{padding:6px!important;font-size:10px}}
 </style>
+
+<style>
+/* Login v4 — mobile composition */
+.login{display:flex!important;align-items:center!important;justify-content:center!important;padding:18px 0!important}
+.loginbox{transform:translateY(2vh);animation:loginCardIn .55s ease-out both}
+@keyframes loginCardIn{from{opacity:0;transform:translateY(5vh) scale(.97)}to{opacity:1;transform:translateY(2vh) scale(1)}}
+.loginbox:after{content:"✦  AVENTURE-SE EM AETHERIA  ✦";display:block;margin:18px auto -4px;font-size:9px;letter-spacing:1.6px;color:#5d83ad;text-align:center}
+@media(max-width:520px){.login{min-height:100dvh!important;padding:10px 0!important}.loginbox{width:88vw!important;max-width:390px!important;padding:26px 22px 20px!important;transform:translateY(1vh)}.loginbox:before{width:58px!important;height:58px!important;margin:-56px auto 10px!important;font-size:27px!important}.login .logo{font-size:29px!important;line-height:1.1!important}.login .sub:first-of-type{margin:7px 0 18px!important}.login input{padding:13px 15px!important;margin:6px 0!important}.login .primary{padding:13px!important;margin-top:10px!important}.login .smallbtn{padding:10px!important}.login #onlineState{margin-top:14px!important;padding-top:12px!important}}
+</style>
 </head><body>
 <div id="login" class="screen login"><div class="card loginbox"><div class="logo">FantasyRM Online</div><div class="sub">Idle RPG • Reino de Aetheria</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Digite o nome do seu herói e depois escolha uma classe.</p><div class="card" style="padding:14px;margin:14px 0 20px"><label for="heroName" style="display:block;font-weight:800;margin-bottom:7px">Nome do personagem</label><input id="heroName" maxlength="18" autocomplete="off" placeholder="Ex.: Nan Silti" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0b1020;color:white;font-size:16px"><div id="heroNameHint" style="color:var(--muted);font-size:12px;margin-top:6px">3 a 18 caracteres.</div></div><div id="chars" class="chars"></div></div></div>
