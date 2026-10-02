@@ -107,6 +107,9 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
  .battle .bars{bottom:78px!important;width:74%!important;max-width:500px!important;padding:9px 12px!important}
  .battle .skills{bottom:16px!important}
 }
+
+/* HUD mobile spacing: actors closer to bars/skills */
+@media(max-width:900px){.runner,.mob{bottom:155px}.runner{bottom:155px}.heroTitle{top:auto;bottom:245px}}
 </style></head><body>
 <div id="login" class="screen login"><div class="card loginbox"><div class="logo">FANTASY RM ONLINE</div><div class="sub">Idle RPG • Reino de Aetheria</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR ONLINE</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Digite o nome do seu herói e depois escolha uma classe.</p><div class="card" style="padding:14px;margin:14px 0 20px"><label for="heroName" style="display:block;font-weight:800;margin-bottom:7px">Nome do personagem</label><input id="heroName" maxlength="18" autocomplete="off" placeholder="Ex.: Nan Silti" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0b1020;color:white;font-size:16px"><div id="heroNameHint" style="color:var(--muted);font-size:12px;margin-top:6px">3 a 18 caracteres.</div></div><div id="chars" class="chars"></div></div></div>
