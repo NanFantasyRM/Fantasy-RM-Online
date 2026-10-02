@@ -19,22 +19,6 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 .navbtn{background:linear-gradient(90deg,#101a2e,#111c32);border-color:#ffffff0b}.navbtn:hover,.navbtn.active{background:linear-gradient(90deg,#294a7b,#1e3156);border-color:#6d8dc7;box-shadow:inset 3px 0 #78b8ff,0 5px 16px #0004}.item,.quest{background:linear-gradient(145deg,#142039,#0c1425);border-color:#48618e66;box-shadow:inset 0 1px #ffffff0b}.smallbtn{background:linear-gradient(#25385e,#182743);border-color:#506b9e}.toast{background:linear-gradient(#1b2946,#0d1628);border-color:#7897cf;box-shadow:0 10px 35px #000a}.float{text-shadow:0 2px 3px #000,0 0 10px currentColor;font-size:20px;z-index:8}
 @media(max-width:900px){.battle{height:460px}.runner,.mob{bottom:100px}.runner{left:7%}.mob{right:7%}.skills{bottom:92px}.bars{bottom:12px;padding:7px 9px}.avatar{height:135px}}
 
-/* HUD FIX v2.1 — barras e skills em zonas separadas */
-@media (max-width:900px){
-  .battle{height:520px;padding-bottom:0}
-  .bars{left:14px;right:14px;bottom:92px;width:auto!important;max-width:none;padding:8px 10px}
-  .skills{left:14px;right:14px;bottom:16px;justify-content:center;gap:9px}
-  .skill{width:52px;height:52px;flex:0 0 52px}
-  .runner,.mob{bottom:190px}
-}
-@media (max-width:420px){
-  .battle{height:500px}
-  .bars{bottom:84px}
-  .skills{bottom:14px;gap:6px}
-  .skill{width:46px;height:46px;flex-basis:46px;font-size:23px}
-  .runner,.mob{bottom:180px}
-}
-
 /* SKILL FX v2.5 */
 .runner{z-index:3}.runner.skill-cast{animation:none!important}.skillAura,.skillRing,.skillParticle{position:absolute;pointer-events:none;z-index:2}.skillAura{width:150px;height:150px;border-radius:50%;left:calc(20% - 42px);bottom:43px;background:radial-gradient(circle,var(--fx) 0,transparent 67%);filter:blur(3px);animation:skillAura .72s ease-out forwards}.skillRing{width:84px;height:84px;border:5px solid var(--fx);border-radius:50%;left:calc(20% - 8px);bottom:73px;box-shadow:0 0 18px var(--fx),inset 0 0 18px var(--fx);animation:skillRing .72s ease-out forwards}.skillParticle{width:9px;height:9px;border-radius:50%;left:calc(20% + 30px);bottom:110px;background:var(--fx);box-shadow:0 0 13px 4px var(--fx);animation:skillParticle .8s ease-out forwards}.runner.skill-cast{filter:drop-shadow(0 0 9px var(--fx)) drop-shadow(0 0 20px var(--fx));transform:scale(1.08)}@keyframes skillAura{0%{transform:scale(.2);opacity:1}100%{transform:scale(1.65);opacity:0}}@keyframes skillRing{0%{transform:scale(.35);opacity:1}100%{transform:scale(1.7);opacity:0}}@keyframes skillParticle{to{transform:translate(var(--dx),var(--dy)) scale(.1);opacity:0}}@media(max-width:900px){.skillAura{left:calc(7% - 42px)}.skillRing{left:calc(7% - 8px)}.skillParticle{left:calc(7% + 30px)}}
 
