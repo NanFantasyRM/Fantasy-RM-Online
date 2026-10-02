@@ -410,11 +410,14 @@ async function renderWorldChat(){
 async function refreshWorldChat(){
   if(!sb||!onlineUser)return;
   let {data,error}=await sb.from('world_chat').select('id,user_id,character_name,level,message,is_admin,created_at').order('created_at',{ascending:false}).limit(60);
-  if(error){tab.innerHTML='<div class="sectionTitle">🌐 Chat Mundial</div><div class="item">Chat aguardando a configuração do banco de dados.</div>';return}
+  let box=document.getElementById('worldChatList');
+  if(error){if(box)box.innerHTML='<div class="item">Chat aguardando a configuração do banco de dados.</div>';return}
   let rows=(data||[]).reverse();
   let html=rows.map(m=>{let when=new Date(m.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return '<div class="chatMsg"><span class="chatName '+(m.is_admin?'chatAdmin':'')+'">'+(m.is_admin?'🔧 ADM ':'')+escapeHtml(m.character_name||'Herói')+'</span><span class="chatTime">Nv.'+(m.level||1)+' • '+when+'</span><div>'+escapeHtml(m.message||'')+'</div>'+(isAdmin?'<button class="smallbtn danger" style="margin-top:5px" onclick="adminDeleteChat(\''+m.id+'\')">Apagar</button>':'')+'</div>'}).join('');
-  tab.innerHTML='<div class="sectionTitle">🌐 Chat Mundial</div><div style="color:var(--muted)">Converse com jogadores conectados. Máximo de 180 caracteres.</div><div id="worldChatList" class="chatList">'+(html||'<div class="sub">Ainda não há mensagens.</div>')+'</div><div class="chatComposer"><input id="worldChatInput" maxlength="180" placeholder="Digite sua mensagem..." onkeydown="if(event.key===\'Enter\')sendWorldChat()"><button class="primary" onclick="sendWorldChat()">Enviar</button></div>';
-  let box=document.getElementById('worldChatList');if(box)box.scrollTop=box.scrollHeight
+  if(!box){tab.innerHTML='<div class="sectionTitle">🌐 Chat Mundial</div><div style="color:var(--muted)">Converse com jogadores conectados. Máximo de 180 caracteres.</div><div id="worldChatList" class="chatList"></div><div class="chatComposer"><input id="worldChatInput" maxlength="180" autocomplete="off" placeholder="Digite sua mensagem..." onkeydown="if(event.key===\'Enter\')sendWorldChat()"><button class="primary" onclick="sendWorldChat()">Enviar</button></div>';box=document.getElementById('worldChatList')}
+  let nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  box.innerHTML=html||'<div class="sub">Ainda não há mensagens.</div>';
+  if(nearBottom)box.scrollTop=box.scrollHeight
 }
 async function sendWorldChat(){
   let inp=document.getElementById('worldChatInput');if(!inp||!P)return;let message=inp.value.trim();if(!message)return;if(message.length>180)return toast('Mensagem muito longa.');
