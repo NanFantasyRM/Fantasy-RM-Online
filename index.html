@@ -150,9 +150,10 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 @keyframes rmButtonPulse{0%,100%{box-shadow:0 0 10px #39bfff,0 8px 26px #176dff77;filter:brightness(1)}50%{box-shadow:0 0 16px #b7efff,0 0 34px #29b6ff,0 0 58px #006cff,0 10px 34px #176dffaa;filter:brightness(1.22)}}
 .login .logo{color:#ffd369!important;background:none!important;-webkit-text-fill-color:#ffd369!important;animation:rmMagicPulse 1.7s ease-in-out infinite!important}
 .login .primary{animation:rmButtonPulse 1.7s ease-in-out infinite!important}
-/* Ajuste das barras — bloco inteiro dentro da arena no mobile */
-.bars{left:4%!important;right:auto!important;bottom:18px!important;width:72%!important;max-width:520px!important;box-sizing:border-box!important}
-@media(max-width:900px){.bars{left:4%!important;right:auto!important;bottom:18px!important;width:72%!important;max-width:none!important;box-sizing:border-box!important}.bars .bar{width:100%!important}}
+/* Correção definitiva HUD de barras: neutraliza translate legado e ancora dentro da arena */
+.battle .bars{left:3%!important;right:auto!important;bottom:18px!important;width:76%!important;max-width:none!important;transform:none!important;box-sizing:border-box!important;margin:0!important}
+.battle .bars .bar{width:100%!important;box-sizing:border-box!important}
+@media(max-width:900px){.battle .bars{left:3%!important;right:auto!important;bottom:18px!important;width:76%!important;max-width:none!important;transform:none!important;margin:0!important}}
 </style>
 <style>
 /* HUD top v3 — teste de publicação */
