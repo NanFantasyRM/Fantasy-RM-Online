@@ -525,6 +525,22 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
   align-self:stretch!important;
 }
 </style>
+<style>
+/* assassin-combat-size-v13 — presença correta do personagem na arena */
+#runner .assassinArt{
+  width:150px!important;
+  height:230px!important;
+  aspect-ratio:auto!important;
+  background-size:contain!important;
+  background-position:center bottom!important;
+  background-repeat:no-repeat!important;
+  transform:translateY(12px)!important;
+  margin:0 auto!important;
+}
+@media(max-width:700px){
+  #runner .assassinArt{width:142px!important;height:218px!important}
+}
+</style>
 </head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon">🌙💰✨</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="logo">FantasyRM</div><div class="sub">⚔️ Idle RPG • Reino de Aetheria • ⚔️</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
@@ -532,7 +548,7 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 <script>
-const GAME_BUILD='2026-10-04-assassin-framing-v12';
+const GAME_BUILD='2026-10-04-assassin-combat-size-v13';
 const classes={Guerreiro:{icon:'🧔',hp:150,mp:65,atk:14,def:12,agi:5,int:3,evo:['Guerreiro','Cavaleiro','Templário','Paladino Real','Guardião Celestial'],skills:['Golpe Pesado','Corte Duplo','Provocar','Investida','Postura de Ferro']},Arqueiro:{icon:'🧝',hp:105,mp:90,atk:17,def:6,agi:13,int:5,evo:['Arqueiro','Caçador','Atirador','Sentinela','Olho Divino'],skills:['Tiro Preciso','Rajada','Flecha Venenosa','Disparo Rápido','Armadilha']},Mago:{icon:'🧙',hp:85,mp:160,atk:20,def:4,agi:6,int:16,evo:['Mago','Feiticeiro','Arquimago','Sábio Arcano','Mestre Astral'],skills:['Bola de Fogo','Raio Arcano','Gelo','Explosão','Escudo Mágico']},Assassino:{icon:'🥷',hp:100,mp:100,atk:19,def:5,agi:17,int:4,evo:['Assassino','Ladino','Executor','Ceifador','Sombra Eterna'],skills:['Corte Sombrio','Veneno','Ataque Duplo','Evasão','Emboscada']}};
 const classBranches={
  Guerreiro:[
