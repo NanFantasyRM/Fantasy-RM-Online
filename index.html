@@ -368,6 +368,19 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
   .rmClassPreview .assassinArt{width:82px}
 }
 </style>
+<style>
+/* v1.3.72 — seleção de herói: personagens maiores e contidos no quadro */
+#chars .avatar{height:220px;overflow:hidden;position:relative;margin-bottom:18px}
+#chars .avatar .spriteAvatar{width:215px;height:215px;max-width:96%;transform:none}
+#chars .avatar .assassinArt{width:142px;height:210px;aspect-ratio:auto;background-size:contain;background-position:center bottom;transform:none}
+#chars .char h2{position:relative;z-index:2;margin-top:0}
+@media(max-width:700px){
+  #chars .char{padding:14px}
+  #chars .avatar{height:205px}
+  #chars .avatar .spriteAvatar{width:198px;height:198px}
+  #chars .avatar .assassinArt{width:132px;height:196px}
+}
+</style>
 </head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon">🌙💰✨</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="logo">FantasyRM</div><div class="sub">⚔️ Idle RPG • Reino de Aetheria • ⚔️</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Digite o nome do seu herói e depois escolha uma classe.</p><div class="card" style="padding:14px;margin:14px 0 20px"><label for="heroName" style="display:block;font-weight:800;margin-bottom:7px">Nome do personagem</label><input id="heroName" maxlength="18" autocomplete="off" placeholder="Ex.: Nan Silti" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0b1020;color:white;font-size:16px"><div id="heroNameHint" style="color:var(--muted);font-size:12px;margin-top:6px">3 a 18 caracteres.</div></div><div id="chars" class="chars"></div></div></div>
