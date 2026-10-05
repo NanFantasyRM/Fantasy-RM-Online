@@ -583,149 +583,52 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
 @media(max-width:900px){#runner:has(.assassinArt){bottom:260px!important}}
 </style>
 
-<style>
-/* warrior-image-customization-v1 — Guerreiro usa as 7 artes completas, como o Assassino */
-.warriorArt{width:250px;height:330px;margin:0 auto;background-repeat:no-repeat;background-size:contain;background-position:center bottom;filter:drop-shadow(0 12px 14px #0009)}
-.warriorArtSmall{width:76px;height:133px;filter:drop-shadow(0 5px 7px #0008)}
-.rmHeroBackdrop .warriorArt{width:min(315px,78vw)!important;height:350px!important;max-width:100%!important;max-height:100%!important;background-size:contain!important;background-position:center bottom!important;background-repeat:no-repeat!important;margin-top:32px!important}
-.rmClassPreview .warriorArt{width:105px!important;height:158px!important;max-width:94%!important;margin:-20px auto -18px!important;background-size:contain!important;background-position:center bottom!important}
-#chars .char .avatar .warriorArt,#select .chars .char .avatar .warriorArt{width:190px!important;height:220px!important;max-width:96%!important;max-height:100%!important;background-size:contain!important;background-position:center bottom!important;margin:0 auto!important}
-.avatar .warriorArt,.gearHeroAvatar .warriorArt{width:120px;height:180px;background-size:contain;background-position:center bottom}
-#runner .warriorArt{width:160px!important;height:242px!important;background-size:contain!important;background-position:center bottom!important;background-repeat:no-repeat!important;margin:0 auto!important}
-#runner:has(.warriorArt){bottom:260px!important}
-@media(max-width:700px){
- .rmHeroBackdrop .warriorArt{width:min(300px,76vw)!important;height:335px!important;margin-top:38px!important}
- .rmClassPreview .warriorArt{width:100px!important;height:150px!important;margin:-17px auto -15px!important}
- #chars .char .avatar .warriorArt,#select .chars .char .avatar .warriorArt{width:178px!important;height:215px!important}
- #runner .warriorArt{width:160px!important;height:242px!important}
- #runner:has(.warriorArt){bottom:260px!important}
-}
-</style>
 
 <style>
-/* warrior-assassin-size-parity-v3 — Guerreiro ocupa exatamente as mesmas caixas do Assassino */
-.rmHeroBackdrop .warriorArt{width:285px!important;height:390px!important;max-width:96%!important;max-height:96%!important;margin:-10px auto 0!important;background-size:contain!important;background-position:center bottom!important}
-.rmClassPreview .warriorArt{width:118px!important;height:178px!important;max-width:98%!important;margin:-28px auto -24px!important;background-size:contain!important;background-position:center bottom!important}
-#chars .char .avatar .warriorArt,#select .chars .char .avatar .warriorArt{width:220px!important;height:260px!important;max-width:100%!important;max-height:100%!important;margin:0 auto!important;background-size:contain!important;background-position:center bottom!important}
-#runner .warriorArt{width:160px!important;height:242px!important;margin:0 auto!important;background-size:contain!important;background-position:center bottom!important;background-repeat:no-repeat!important}
-#runner:has(.warriorArt){bottom:260px!important}
-.avatarChoiceRow .avatarChoice{min-width:64px}
-@media(max-width:700px){
- .rmHeroBackdrop .warriorArt{width:285px!important;height:390px!important;margin:-10px auto 0!important}
- .rmClassPreview .warriorArt{width:118px!important;height:178px!important;margin:-28px auto -24px!important}
- #chars .char .avatar .warriorArt,#select .chars .char .avatar .warriorArt{width:220px!important;height:260px!important}
- #runner .warriorArt{width:160px!important;height:242px!important}
- #runner:has(.warriorArt){bottom:260px!important}
+/* warrior-art-final-v27 — regras consolidadas por contexto */
+#select .chars .char .avatar,
+#chars .char .avatar{
+  position:relative!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
 }
-</style>
 
-<style>
-/* warrior-visual-parity-v6 — enquadramento visual igual ao Assassino na criação e miniatura */
+/* Seleção: escala própria do Guerreiro para preencher visualmente o quadro */
+#select .chars .char .avatar > .warriorArt,
+#chars .char .avatar > .warriorArt{
+  position:absolute!important;
+  left:50%!important;
+  bottom:-2%!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+  background-size:auto 178%!important;
+  background-position:center 74%!important;
+  background-repeat:no-repeat!important;
+  filter:drop-shadow(0 10px 12px #0008)!important;
+}
+
+/* Personalização grande */
 .rmHeroBackdrop .warriorArt{
   width:min(315px,78vw)!important;
   height:100%!important;
   max-width:100%!important;
   max-height:100%!important;
+  margin:0 auto!important;
+  transform:none!important;
   background-size:auto 124%!important;
   background-position:center top!important;
   background-repeat:no-repeat!important;
-  transform:none!important;
-  margin:0 auto!important;
   align-self:stretch!important;
 }
-.rmClassPreview .warriorArt{
-  width:92px!important;
-  height:155px!important;
-  max-width:98%!important;
-  max-height:155px!important;
-  background-size:contain!important;
-  background-position:center bottom!important;
-  transform:none!important;
-  margin:-18px auto -12px!important;
-}
-#runner .warriorArt{
-  width:160px!important;
-  height:242px!important;
-  background-size:contain!important;
-  background-position:center bottom!important;
-  background-repeat:no-repeat!important;
-  transform:none!important;
-  margin:0 auto!important;
-}
-#runner:has(.warriorArt){bottom:260px!important}
-@media(max-width:700px){
- .rmHeroBackdrop .warriorArt{width:min(315px,78vw)!important;height:100%!important;background-size:auto 124%!important;background-position:center top!important}
- .rmClassPreview .warriorArt{width:92px!important;height:155px!important;margin:-18px auto -12px!important}
- #runner .warriorArt{width:160px!important;height:242px!important}
- #runner:has(.warriorArt){bottom:260px!important}
-}
-</style>
 
-<style>
-/* warrior-visual-match-v11 — amplia o desenho do Guerreiro dentro do quadro, mantendo-o inteiro */
-#select #chars .char .avatar .warriorArt{
-  inset:-28px -22px -8px -22px!important;
-  background-size:contain!important;
-  background-position:center bottom!important;
-}
-.rmClassPreview button:has(.warriorArt) > span{
-  inset:-17px -13px 20px -13px!important;
-}
-.rmClassPreview button:has(.warriorArt) > span > .warriorArt{
-  inset:0!important;
-  background-size:contain!important;
-  background-position:center bottom!important;
-}
-@media(max-width:700px){
- #select #chars .char .avatar .warriorArt{inset:-28px -22px -8px -22px!important}
- .rmClassPreview button:has(.warriorArt) > span{inset:-17px -13px 20px -13px!important}
-}
-</style>
-
-
-<style>
-/* warrior-hair5-same-frame-v14 — opção 5 usa exatamente o mesmo quadro/posição das demais */
-.rmHeroBackdrop .warriorArt[aria-label="Guerreiro - Espetado Anime"]{
-  width:min(315px,78vw)!important;
-  height:100%!important;
-  max-width:100%!important;
-  max-height:100%!important;
-  background-size:auto 124%!important;
-  background-position:center top!important;
-  background-repeat:no-repeat!important;
-  transform:none!important;
-  margin:0 auto!important;
-  align-self:stretch!important;
-}
-</style>
-
-
-
-
-<style>
-/* class-art-standard-v21 — padrão reutilizável para todas as classes com PNG */
-#select .chars .char .avatar{
-  position:relative!important;
-  overflow:hidden!important;
-}
-#select .chars .char .avatar > .warriorArt,
-#chars .char .avatar > .warriorArt{
-  position:static!important;
-  width:100%!important;
-  height:100%!important;
-  max-width:100%!important;
-  max-height:100%!important;
-  margin:0 auto!important;
-  transform:none!important;
-  background-size:auto 150%!important;
-  background-position:center 68%!important;
-  background-repeat:no-repeat!important;
-  flex:1 1 auto!important;
-}
-.rmClassPreview button{
-  position:relative!important;
-  overflow:hidden!important;
-}
+/* Mini-card da personalização */
+.rmClassPreview button{position:relative!important;overflow:hidden!important}
 .rmClassPreview button > span{
   height:112px!important;
   display:flex!important;
@@ -751,11 +654,23 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
   max-height:none!important;
   margin:0 auto!important;
   transform:none!important;
-  background-size:contain!important;
-  background-position:center bottom!important;
+  background-size:auto 145%!important;
+  background-position:center 72%!important;
   background-repeat:no-repeat!important;
   flex:0 0 auto!important;
 }
+
+/* Combate */
+#runner .warriorArt{
+  width:160px!important;
+  height:242px!important;
+  margin:0 auto!important;
+  transform:none!important;
+  background-size:contain!important;
+  background-position:center bottom!important;
+  background-repeat:no-repeat!important;
+}
+#runner:has(.warriorArt){bottom:260px!important}
 </style>
 </head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon">🌙💰✨</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="logo">FantasyRM</div><div class="sub">⚔️ Idle RPG • Reino de Aetheria • ⚔️</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
@@ -764,7 +679,7 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 <script>
-const GAME_BUILD='2026-10-05-warrior-card-reference-v26';
+const GAME_BUILD='2026-10-05-warrior-consolidated-v27';
 const classes={Guerreiro:{icon:'🧔',hp:150,mp:65,atk:14,def:12,agi:5,int:3,evo:['Guerreiro','Cavaleiro','Templário','Paladino Real','Guardião Celestial'],skills:['Golpe Pesado','Corte Duplo','Provocar','Investida','Postura de Ferro']},Arqueiro:{icon:'🧝',hp:105,mp:90,atk:17,def:6,agi:13,int:5,evo:['Arqueiro','Caçador','Atirador','Sentinela','Olho Divino'],skills:['Tiro Preciso','Rajada','Flecha Venenosa','Disparo Rápido','Armadilha']},Mago:{icon:'🧙',hp:85,mp:160,atk:20,def:4,agi:6,int:16,evo:['Mago','Feiticeiro','Arquimago','Sábio Arcano','Mestre Astral'],skills:['Bola de Fogo','Raio Arcano','Gelo','Explosão','Escudo Mágico']},Assassino:{icon:'🥷',hp:100,mp:100,atk:19,def:5,agi:17,int:4,evo:['Assassino','Ladino','Executor','Ceifador','Sombra Eterna'],skills:['Corte Sombrio','Veneno','Ataque Duplo','Evasão','Emboscada']}};
 const classBranches={
  Guerreiro:[
