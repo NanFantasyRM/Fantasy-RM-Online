@@ -615,6 +615,8 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
 
 /* Personalização grande */
 .rmHeroBackdrop .warriorArt{
+  position:relative!important;
+  z-index:4!important;
   width:min(315px,78vw)!important;
   height:100%!important;
   max-width:100%!important;
@@ -626,6 +628,7 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
   background-repeat:no-repeat!important;
   align-self:stretch!important;
 }
+.rmHeroBackdrop:has(.warriorArt) .rmHeroGlow{z-index:1!important}
 
 /* Mini-card da personalização */
 .rmClassPreview button{position:relative!important;overflow:hidden!important}
@@ -646,16 +649,16 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
 }
 .rmClassPreview button > span > .warriorArt{
   position:static!important;
-  width:112px!important;
-  height:112px!important;
-  min-width:112px!important;
-  min-height:112px!important;
-  max-width:none!important;
-  max-height:none!important;
+  width:78px!important;
+  height:80px!important;
+  min-width:78px!important;
+  min-height:80px!important;
+  max-width:78px!important;
+  max-height:80px!important;
   margin:0 auto!important;
   transform:none!important;
-  background-size:auto 145%!important;
-  background-position:center 72%!important;
+  background-size:contain!important;
+  background-position:center bottom!important;
   background-repeat:no-repeat!important;
   flex:0 0 auto!important;
 }
