@@ -796,6 +796,25 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
   align-self:stretch!important;
 }
 </style>
+<style>
+/* archer-variants-safe-v4 — cabelos 2–6 inteiros; cabelo 1 mantém o enquadramento atual */
+.rmHeroBackdrop .archerArt[aria-label*="Franja Heroica"],
+.rmHeroBackdrop .archerArt[aria-label*="Longo em Camadas"],
+.rmHeroBackdrop .archerArt[aria-label*="Espetado Anime"],
+.rmHeroBackdrop .archerArt[aria-label*="Corte Baixo"],
+.rmHeroBackdrop .archerArt[aria-label*="Rabo de Guerreiro"]{
+  width:min(315px,78vw)!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  margin:0 auto!important;
+  background-size:contain!important;
+  background-position:center bottom!important;
+  background-repeat:no-repeat!important;
+  transform:none!important;
+  align-self:stretch!important;
+}
+</style>
 </head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon">🌙💰✨</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="logo">FantasyRM</div><div class="sub">⚔️ Idle RPG • Reino de Aetheria • ⚔️</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
