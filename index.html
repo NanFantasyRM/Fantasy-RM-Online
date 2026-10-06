@@ -983,6 +983,24 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
 #coopArena .coopAvatar .charSprite>.assassinArt,#coopArena .coopAvatar .charSprite>.warriorArt,#coopArena .coopAvatar .charSprite>.mageArt{width:118px!important;height:135px!important;min-width:118px!important;min-height:135px!important}
 #coopArena .coopPlayerStats{left:10px!important;top:78px!important;width:42vw!important;max-width:210px!important}
 }
+</style><style>
+/* dungeon-player-lower-larger-v2 */
+#coopArena.golemAbyssArena .coopParty{top:205px!important;left:3%!important;width:48%!important}
+#coopArena.golemAbyssArena .coopAvatar{height:205px!important}
+#coopArena.golemAbyssArena .coopAvatar .charSprite{width:180px!important;height:205px!important}
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.assassinArt,
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.warriorArt,
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.mageArt{width:180px!important;height:205px!important;min-width:180px!important;min-height:205px!important;background-size:contain!important;background-position:center bottom!important}
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.spriteAvatar{transform:scale(1.48)!important;transform-origin:center bottom!important}
+#coopArena.golemAbyssArena .coopPlayerName{margin-top:-3px!important;font-size:14px!important}
+@media(max-width:700px){
+#coopArena.golemAbyssArena .coopParty{top:190px!important;left:3%!important;width:49%!important}
+#coopArena.golemAbyssArena .coopAvatar{height:190px!important}
+#coopArena.golemAbyssArena .coopAvatar .charSprite{width:170px!important;height:190px!important}
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.assassinArt,
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.warriorArt,
+#coopArena.golemAbyssArena .coopAvatar .charSprite>.mageArt{width:170px!important;height:190px!important;min-width:170px!important;min-height:190px!important}
+}
 </style></head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon">🌙💰✨</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="logo">FantasyRM</div><div class="sub">⚔️ Idle RPG • Reino de Aetheria • ⚔️</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
