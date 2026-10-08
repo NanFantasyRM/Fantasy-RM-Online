@@ -1160,7 +1160,17 @@ function remoteRuneText(x){let rs=Array.isArray(x?.runes)?x.runes:[],max=Math.ma
 function remoteGearIcon(slot,x){let map={Arma:'⚔️',Armadura:'🥋',Elmo:'🪖',Botas:'🥾',Anel:'💍'},n=String(x?.name||'').toLowerCase();if(slot==='Arma'&&n.includes('arco'))return '🏹';if(slot==='Arma'&&n.includes('cajado'))return '🪄';if(slot==='Arma'&&n.includes('adaga'))return '🗡️';return map[slot]||'◇'}
 function remoteGearSlot(slot,x){
  if(!x)return '<div class="remoteGearSlot remoteGearEmpty"><div class="remoteGearIcon">'+remoteGearIcon(slot)+'</div><div class="remoteGearLabel">'+(slotLabels[slot]||slot)+'</div><div class="remoteGearItem">Vazio</div></div>';
- const art=typeof equipArtPath==='function'?equipArtPath(x):'';
+ const itemText=String(x.type||'')+' '+String(x.name||'');
+ const classText=String(inspectedPlayer?.className||inspectedPlayer?.player?.cls||'').toLowerCase();
+ let inferredType='';
+ if(slot==='Botas')inferredType='Bota';
+ else if(slot==='Elmo')inferredType='Elmo';
+ else if(slot==='Armadura')inferredType='Armadura';
+ else if(slot==='Anel')inferredType='Anel';
+ else if(slot==='Arma'&&!/arco|cajado|bast[aã]o|espada|adaga/i.test(itemText)){
+   inferredType=/mago|wizard|feiticeiro|bruxo|sorcerer/i.test(classText)?'Cajado':/arqueiro|archer|ca[cç]ador/i.test(classText)?'Arco':/assassino|rogue|thief|ladino/i.test(classText)?'Adaga':/guerreiro|warrior|cavaleiro/i.test(classText)?'Espada':'';
+ }
+ const art=typeof equipArtPath==='function'?equipArtPath(inferredType?{...x,type:inferredType}:x):'';
  const fallback=remoteGearIcon(slot,x);
  const icon=art?'<span class="remoteGearFallback" style="display:none">'+fallback+'</span><img class="remoteGearArt" src="'+escapeHtml(art)+'" alt="Imagem do equipamento" loading="eager" onerror="this.previousElementSibling.style.display=\'\';this.remove()">':fallback;
  return '<div class="remoteGearSlot '+enchantGlowClass(x)+'" onclick="showRemoteEquipmentDetail(\''+slot+'\')">'+(Number(x.enchant||0)>=20?'<span class="maxRefineStars"><i>✦</i><b>✧</b></span>':'')+'<span class="remoteGearEnchant">+'+Number(x.enchant||0)+'</span><div class="remoteGearIcon">'+icon+'</div><div class="remoteGearLabel">'+(slotLabels[slot]||slot)+'</div><div class="remoteGearItem rar-'+escapeHtml(x.rc||'')+'">'+escapeHtml(x.name||slot)+'</div></div>';
