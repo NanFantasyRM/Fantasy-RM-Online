@@ -1986,7 +1986,25 @@ function openEquipArtDetail(kind,key){const x=kind==='equipped'?P.equip[key]:P.b
 function closeEquipArtDetail(){document.getElementById('equipArtOverlay')?.remove()}
 const _equippedCardArt=equippedCard;equippedCard=function(slot,x){const html=_equippedCardArt(slot,x);return x?html.replace('<div class="slotname">','<div class="slotname">').replace('</div><div class="itemhead">','</div>'+equipArtThumb(x,'equipped',slot)+'<div class="itemhead">'):html};
 
-</script></body></html>
+<style id="profile-gear-art-v2-style">
+.characterGearView .gearSlot .gearSlotIcon img.profileGearArt{display:block;width:100%;height:100%;max-width:92px;max-height:108px;object-fit:contain;margin:auto;filter:drop-shadow(0 0 7px rgba(130,170,255,.23))}
+.characterGearView .gearSlot .gearSlotIcon:has(img.profileGearArt){display:flex;align-items:center;justify-content:center;min-height:82px}
+.characterGearView .gearSlot .gearSlotIcon img.profileGearArt[src=""]{display:none}
+</style><script id="profile-gear-art-v2-script">
+(function(){
+ const previousProfileGearSlot=profileGearSlot;
+ profileGearSlot=function(slot){
+  const html=previousProfileGearSlot(slot);
+  const item=P&&P.equip&&P.equip[slot];
+  if(!item)return html;
+  const src=typeof equipArtPath==='function'?equipArtPath(item):'';
+  if(!src)return html;
+  const escaped=src.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  const image='<img class="profileGearArt" src="'+escaped+'" alt="Arte do equipamento" loading="lazy" onerror="this.remove()" />';
+  return html.replace(/(<div class="gearSlotIcon">)([\\s\\S]*?)(<\\/div>)/,function(all,start,icon,end){return start+'<span class="gearFallbackIcon" style="display:none">'+icon+'</span>'+image+end}).replace('onerror="this.remove()"','onerror="this.previousElementSibling.style.display=\'\';this.remove()"');
+ };
+})();
+</script></script></body></html>
 <!-- redeploy production: hero title alignment -->
 
 <!-- vercel reconnect trigger 2026-10-02 -->
