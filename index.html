@@ -2172,7 +2172,7 @@ openEquipArtDetail=function(kind,key){
 function closeEquipArtDetail(){document.getElementById('equipArtOverlay')?.remove()}
 const _equippedCardArt=equippedCard;equippedCard=function(slot,x){const html=_equippedCardArt(slot,x);return x?html.replace('<div class="slotname">','<div class="slotname">').replace('</div><div class="itemhead">','</div>'+equipArtThumb(x,'equipped',slot)+'<div class="itemhead">'):html};
 
-</script><style id="gem-art-detail-style">.rm-legend-gem-art{width:100%;height:100%;object-fit:contain;display:block}.rm-legend-gem{overflow:hidden}</style><style id="profile-gear-art-v2-style">
+</script><style id="rm-detail-no-flicker-fix">#equipArtOverlay .rm-legend-panel.rm-detail-enchanted::before{animation:none!important;background:none!important;content:none!important}#equipArtOverlay .rm-legend-panel.rm-detail-rarity{animation:none!important;transition:none!important}#equipArtOverlay .rm-legend-panel.rm-detail-rarity::after{animation:none!important}#equipArtOverlay .rm-legend-panel.rm-detail-rarity .rm-legend-image{animation:none!important}</style><style id="gem-art-detail-style">.rm-legend-gem-art{width:100%;height:100%;object-fit:contain;display:block}.rm-legend-gem{overflow:hidden}</style><style id="profile-gear-art-v2-style">
 /* A arte deve ocupar somente a area do icone, nunca aumentar o slot. */
 .characterGearView .gearSlot{overflow:hidden!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .characterGearView .gearSlot .gearSlotIcon:has(img.profileGearArt){display:flex!important;align-items:center;justify-content:center;flex:0 0 51px!important;height:51px!important;min-height:0!important;max-height:51px!important;width:100%;min-width:0;overflow:hidden}
