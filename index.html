@@ -2910,6 +2910,7 @@ function openEquipArtDetail(kind,key){
 const _rmOpenEquipArtDetail=openEquipArtDetail;
 openEquipArtDetail=function(kind,key){
  _rmOpenEquipArtDetail(kind,key);
+ if(kind==='bag'||kind==='equipped')try{window.rmJourneyItemSelected?.()}catch(e){console.warn('Tutorial selection:',e)}
  const panel=document.querySelector('#equipArtOverlay .equip-art-panel');
  if(!panel)return;
  const x=kind==='remote'?inspectedPlayer?.equip?.[key]:kind==='bag'?P.bag[Number(key)]:P.equip[key];
@@ -3038,6 +3039,7 @@ function hint(m){
 function advance(key,n){const st=state();if(!st||!st[key]||st[key].done)return;st[key].step=Math.max(st[key].step||0,n);const m=milestones.find(x=>x.key===key);if(st[key].step>=m.steps.length){st[key].done=true;active=null;document.getElementById('rmJourneyObjective')?.remove();document.querySelectorAll('.rmJourneyTarget').forEach(x=>x.classList.remove('rmJourneyTarget'));try{toast('✨ Tutorial concluído: '+m.title);saveGame(false)}catch(e){};setTimeout(()=>window.rmJourneyCheck(),400)}else{hint(m);try{saveGame(true)}catch(e){}}}
 window.rmJourneyAction=function(action){const p=getP();if(!p)return;if(action==='bag'){advance('enchant',1);if(state()?.gems?.step===2)hint(milestones[1])}if(action==='shop')advance('gems',1);if(action==='gemBought')advance('gems',2);if(action==='dungeon')advance('dungeon',1);if(action==='party')advance('dungeon',2);if(action==='petDungeon')advance('pets',1);if(action==='egg')advance('pets',2);if(action==='petSummoned')advance('pets',3)};
 window.rmJourneyCheck=function(){const p=getP();const book=document.getElementById('rmJourneyHelp');if(!p||!p.level){book?.classList.remove('rmJourneyPending');document.getElementById('rmJourneyObjective')?.remove();return;}if(p!==lastPlayer){lastPlayer=p;lastLevel=p.level}const st=state();const m=milestones.find(x=>p.level>=x.lv&&!st[x.key]?.done);book?.classList.toggle('rmJourneyPending',!!m);if(m){const overlay=document.getElementById('rmJourney');if(!st[m.key]?.seen&&overlay&&overlay.hidden===false){/* already showing */}else if(!st[m.key]?.seen)show(m);else if(!st[m.key]?.done){active=m;hint(m)}}else{document.getElementById('rmJourneyObjective')?.remove();checkClassUnlocks()}lastLevel=p.level};
+window.rmJourneyItemSelected=function(){const st=state()?.enchant;if(st&&!st.done&&Number(st.step)===1)advance('enchant',2)};
 window.rmJourneyEnchant=function(){advance('enchant',3)};
 window.rmJourneyGemSocket=function(){advance('gems',3)};
 window.rmJourneyDungeonWin=function(){advance('dungeon',3);setTimeout(()=>window.rmJourneyCheck(),500)};
