@@ -1827,12 +1827,12 @@ async function switchCharacterSlot(){if(!onlineUser)return;await showCharacterSl
 function logoutOnline(){if(!sb||!onlineUser)return;document.getElementById('rmLogoutOverlay').hidden=false}
 function closeLogoutPopup(){document.getElementById('rmLogoutOverlay').hidden=true}
 async function confirmLogoutOnline(){if(!sb||!onlineUser)return;let btn=document.getElementById('rmLogoutConfirm');btn.disabled=true;btn.textContent='Saindo...';try{await cloudSave(true);let {error}=await sb.auth.signOut();if(error)throw error;onlineUser=null;currentUser='';P=null;if(timer){clearInterval(timer);timer=null}setScreenMode('login');document.getElementById('game').classList.add('hidden');document.getElementById('select').classList.add('hidden');document.getElementById('login').classList.remove('hidden');document.getElementById('pass').value='';document.getElementById('onlineState').textContent='☁️ Sessão encerrada. Entre com sua conta.';closeLogoutPopup();toast('Você saiu da conta.')}catch(e){console.warn(e);toast('Não foi possível sair: '+(e.message||e))}finally{btn.disabled=false;btn.textContent='Sair da conta'}}
-async function cloudSave(silent=true){if(characterDeleteInProgress||!P||!onlineUser||!sb)return;let safe=JSON.parse(JSON.stringify(P));safe.skillCooldowns={};safe.lastActiveAt=Date.now();let power=characterPower();let payload={user_id:onlineUser.id,email:onlineUser.email,character_name:safe.name||safe.cls,class_name:safe.cls,level:safe.level||1,stage:safe.stage||1,power,player:safe,updated_at:new Date().toISOString()};let {error}=activeCharacterSlot===1?await sb.from('player_saves').upsert(payload,{onConflict:'user_id'}):await sb.from('player_character_slots').upsert({user_id:onlineUser.id,slot:activeCharacterSlot,player:safe,updated_at:new Date().toISOString()},{onConflict:'user_id,slot'});if(error){console.warn(error);return}syncPartyProfile();let el=document.getElementById('saveState');if(el){el.textContent='☁️ Progresso salvo';el.classList.add('show','ok');clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(()=>el.classList.remove('show'),1100)}if(!silent)toast('Progresso salvo na nuvem!')}
+async function cloudSave(silent=true){if(characterDeleteInProgress||!P||!onlineUser||!sb)return;let safe=JSON.parse(JSON.stringify(P));safe.skillCooldowns={};safe.lastActiveAt=Date.now();let power=characterPower();safe.rankPower=power;let payload={user_id:onlineUser.id,email:onlineUser.email,character_name:safe.name||safe.cls,class_name:safe.cls,level:safe.level||1,stage:safe.stage||1,power,player:safe,updated_at:new Date().toISOString()};let {error}=activeCharacterSlot===1?await sb.from('player_saves').upsert(payload,{onConflict:'user_id'}):await sb.from('player_character_slots').upsert({user_id:onlineUser.id,slot:activeCharacterSlot,player:safe,updated_at:new Date().toISOString()},{onConflict:'user_id,slot'});if(error){console.warn(error);return}syncPartyProfile();let el=document.getElementById('saveState');if(el){el.textContent='☁️ Progresso salvo';el.classList.add('show','ok');clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(()=>el.classList.remove('show'),1100)}if(!silent)toast('Progresso salvo na nuvem!')}
 function saveGame(silent=true){if(onlineUser&&sb){cloudSave(silent);return}saveGameLocalLegacy(silent)}
-function rmRankingInspect(uid,name){
+function rmRankingInspect(uid,name,slot=1){
  if(!uid)return;
- if(uid===onlineUser?.id){toast('👤 Seu personagem: abra Herói / Status para ver seus atributos.');showTab('status');return}
- socialTarget={uid,name};viewPlayerProfile();
+ slot=Number(slot)||1;
+ socialTarget={uid,name,slot};viewPlayerProfile();
 }
 let rmRankingMode='power';
 async function renderRanking(mode=rmRankingMode){
@@ -1841,17 +1841,11 @@ async function renderRanking(mode=rmRankingMode){
  if(!initOnline()){tab.innerHTML='<div class="sectionTitle">🏆 Ranking Global</div><p>Conecte-se para visualizar os rankings.</p>';return}
  const modes=[['power','⚔️ Poder'],['level','⭐ Nível'],['stage','🗺️ Estágios'],['pet','🐾 Nível de Pet']];
  const buttons=()=>'<div class="rmRankingTabs" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 16px">'+modes.map(([k,label])=>'<button class="smallbtn '+(rmRankingMode===k?'good':'')+'" style="padding:11px 5px;border-color:'+(rmRankingMode===k?'#49baff':'#344b6e')+'" onclick="renderRanking(\''+k+'\')">'+label+'</button>').join('')+'</div>';
- let {data,error}=await sb.from('global_ranking').select('*').limit(1000);
+ let {data,error}=await sb.rpc('get_character_ranking');
+ if(error){tab.innerHTML='<div class="sectionTitle">🏆 Ranking Global</div>'+buttons()+'<div class="item">Ranking de 3 personagens ainda não configurado no Supabase. Execute o SQL de atualização antes de testar.</div>';return}
  if(error){tab.innerHTML='<div class="sectionTitle">🏆 Ranking Global</div>'+buttons()+'<p>Não foi possível carregar o ranking.</p>';return}
  let rows=(data||[]).filter(x=>x&&x.character_name);
- if(rmRankingMode==='pet'){
-  // Pet progression is saved inside the character JSON, not the global_ranking view.
-  // Read only records permitted by existing Supabase RLS; never expose the saved character JSON.
-  let {data:saves,error:petError}=await sb.from('player_saves').select('user_id,player').limit(1000);
-  if(petError){tab.innerHTML='<div class="sectionTitle">🏆 Ranking Global</div>'+buttons()+'<div class="item">O ranking de Pets precisa de acesso autorizado aos níveis de pet no Supabase. Nenhum nível foi inventado.</div>';return}
-  const petsById=new Map((saves||[]).map(x=>[x.user_id,Math.max(0,...(Array.isArray(x.player?.pets)?x.player.pets:[]).map(p=>Number(p?.level)||0))]));
-  rows=rows.filter(x=>petsById.has(x.user_id)&&petsById.get(x.user_id)>0).map(x=>({...x,petLevel:petsById.get(x.user_id)}));
- }
+ if(rmRankingMode==='pet')rows=rows.filter(x=>Number(x.pet_level)>0).map(x=>({...x,petLevel:Number(x.pet_level)}));
  const key=rmRankingMode==='level'?'level':rmRankingMode==='stage'?'stage':rmRankingMode==='pet'?'petLevel':'power';
  rows.sort((a,b)=>(Number(b[key])||0)-(Number(a[key])||0)||(Number(b.power)||0)-(Number(a.power)||0));
  const title={power:'LENDAS DO PODER',level:'MESTRES DA EVOLUÇÃO',stage:'CONQUISTADORES',pet:'DOMADORES LENDÁRIOS'}[rmRankingMode];
@@ -1859,7 +1853,7 @@ async function renderRanking(mode=rmRankingMode){
  const rankCard=(x,i)=>{
   const name=escapeHtml(x.character_name||'Herói'),safeUid=String(x.user_id||'').replace(/[^a-zA-Z0-9-]/g,''),safeArg=name.replaceAll("'","&#39;");
   const medal=['🥇','🥈','🥉'][i]||'✦',tier=i===0?'gold':i===1?'silver':i===2?'bronze':'normal';
-  return '<article class="rmRankCard '+tier+'"><div class="rmRankPlace"><span class="rmRankMedal">'+medal+'</span><strong>#'+(i+1)+'</strong></div><div class="rmRankInfo"><div class="rmRankName">'+name+(x.user_id===onlineUser?.id?' <small>VOCÊ</small>':'')+'</div><div class="rmRankMeta">'+escapeHtml(x.class_name||'Aventureiro')+' <span>•</span> Nv. '+Number(x.level||1)+' <span>•</span> Estágio '+Number(x.stage||1)+'</div><div class="rmRankBottom"><span class="rmRankScore">'+value(x)+'</span><button class="rmRankInspect" onclick="rmRankingInspect(\''+safeUid+'\',\''+safeArg+'\')">🔎 Inspecionar <span>›</span></button></div></div></article>';
+  return '<article class="rmRankCard '+tier+'"><div class="rmRankPlace"><span class="rmRankMedal">'+medal+'</span><strong>#'+(i+1)+'</strong></div><div class="rmRankInfo"><div class="rmRankName">'+name+(x.user_id===onlineUser?.id?' <small>SEU PERSONAGEM</small>':'')+'</div><div class="rmRankMeta">'+escapeHtml(x.class_name||'Aventureiro')+' <span>•</span> Nv. '+Number(x.level||1)+' <span>•</span> Estágio '+Number(x.stage||1)+'</div><div class="rmRankBottom"><span class="rmRankScore">'+value(x)+'</span><button class="rmRankInspect" onclick="rmRankingInspect(\''+safeUid+'\',\''+safeArg+'\','+Number(x.slot||1)+')">🔎 Inspecionar <span>›</span></button></div></div></article>';
  };
  tab.innerHTML='<div class="rmRankHeader"><div class="rmRankEyebrow">FANTASY RM • HALL DA FAMA</div><div class="rmRankHeading">🏆 Ranking Global</div><div class="rmRankIntro">Os maiores aventureiros do reino</div></div>'+buttons()+'<div class="rmRankSection"><span>✦ '+title+'</span><small>TOP 50</small></div><div class="rmRankList">'+(rows.slice(0,50).map(rankCard).join('')||'<div class="item">Nenhum personagem encontrado neste ranking.</div>')+'</div>';
 
@@ -1918,13 +1912,16 @@ function renderRemotePetCard(p){
  return '<section class="remotePetCard"><div class="remotePetTitle">🐾 PET EQUIPADO</div><div class="remotePetDetails"><div class="remotePetImage">'+img+'</div><div class="remotePetText"><b>'+escapeHtml(pet.name||'Pet')+'</b><span>'+rarity+' • Nv. '+Number(pet.level||1)+'</span>'+(bonuses?'<small>'+bonuses+'</small>':'')+'</div></div></section>';
 }
 function renderInspectedPlayer(){let d=inspectedPlayer;if(!d)return;let p=d.player||{},eq=d.equip||{},S=d.stats||[];socialOpen('<div class="itemhead"><div><div class="sub">PERFIL DO JOGADOR</div><b>'+escapeHtml(d.className||p.cls||'')+' • Estágio '+Number(d.stage||1)+'</b></div><button class="smallbtn" onclick="openPlayerMenu(\''+d.uid+'\',\''+escapeHtml(d.targetName).replaceAll("'","&#39;")+'\')">←</button></div><div class="remoteProfileGear"><div class="remoteGearCol">'+remoteGearSlot('Arma',eq.Arma)+remoteGearSlot('Armadura',eq.Armadura)+'</div><div class="remoteHero"><div class="remoteHeroAvatar">'+(activeSubclass(p)?subclassArtHtml(activeSubclass(p),'aparência',true):avatarHtml(p.avatar||defaultAvatar(p.cls||d.className),p.cls||d.className,true))+'</div><div class="remoteHeroName">'+escapeHtml(d.name)+'</div><div>Nv. '+Number(d.level||1)+'</div><div class="remotePower">⚡ '+Number(d.power||0).toLocaleString('pt-BR')+'</div>'+renderRemotePetCard(p)+'</div><div class="remoteGearCol">'+remoteGearSlot('Elmo',eq.Elmo)+remoteGearSlot('Botas',eq.Botas)+remoteGearSlot('Anel',eq.Anel)+'</div></div><div class="remoteStatGrid">'+S.map(s=>'<div class="remoteStat">'+s[0]+'<b>'+Number(s[1]).toLocaleString('pt-BR')+(s[2]||'')+'</b></div>').join('')+'</div><div class="sub" style="text-align:center;margin-top:10px">Toque em um equipamento para ver status, encantamento e gemas.</div>')}
-async function viewPlayerProfile(){let t=socialTarget;if(!t||!sb)return;socialOpen('<div class="sub">🔎 Carregando perfil de '+escapeHtml(t.name)+'...</div>');let {data,error}=await sb.rpc('get_public_player_profile',{p_user_id:t.uid});if(error||!data||(Array.isArray(data)&&!data.length)){
+async function viewPlayerProfile(){let t=socialTarget;if(!t||!sb)return;socialOpen('<div class="sub">🔎 Carregando perfil de '+escapeHtml(t.name)+'...</div>');let {data,error}=await sb.rpc('get_public_character_profile',{p_user_id:t.uid,p_slot:Number(t.slot||1)});if((error||!data||(Array.isArray(data)&&!data.length))&&Number(t.slot||1)===1){
+ ({data,error}=await sb.rpc('get_public_player_profile',{p_user_id:t.uid}));
+ }
+ if(error||!data||(Array.isArray(data)&&!data.length)){
  console.warn('Perfil público RPC:',error);
  // Some deployments do not expose the public profile RPC. Try an RLS-authorized
  // save read; otherwise display only genuinely public ranking information.
  let saved=null;
  try{const result=await sb.from('player_saves').select('user_id,character_name,class_name,level,stage,power,player').eq('user_id',t.uid).maybeSingle();if(!result.error&&result.data?.player)saved=result.data}catch(e){console.warn('Perfil fallback:',e)}
- if(saved){data=saved}else{
+ if(saved&&Number(t.slot||1)===1){data=saved}else{
   let ranking=null;
   try{const result=await sb.from('global_ranking').select('*').eq('user_id',t.uid).limit(1);ranking=result.data?.[0]||null}catch(e){}
   const safeName=escapeHtml(ranking?.character_name||t.name);
