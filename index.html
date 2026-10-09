@@ -2173,21 +2173,22 @@ function closeEquipArtDetail(){document.getElementById('equipArtOverlay')?.remov
 const _equippedCardArt=equippedCard;equippedCard=function(slot,x){const html=_equippedCardArt(slot,x);return x?html.replace('<div class="slotname">','<div class="slotname">').replace('</div><div class="itemhead">','</div>'+equipArtThumb(x,'equipped',slot)+'<div class="itemhead">'):html};
 
 </script><style id="rm-detail-no-flicker-fix">
-/* Borda fixa com reflexo em movimento, sem animar propriedades CSS personalizadas. */
+/* Reflexo percorre apenas a moldura: nunca rotacionar um retangulo sobre o painel. */
 #equipArtOverlay .rm-legend-panel.rm-detail-rarity{position:relative;isolation:isolate;animation:none!important;transition:none!important}
 #equipArtOverlay .rm-legend-panel.rm-detail-enchanted::before{
- content:""!important;position:absolute!important;inset:0!important;border-radius:inherit!important;
- padding:3px!important;box-sizing:border-box!important;
- background:conic-gradient(from 0deg,transparent 0deg,transparent 230deg,var(--rm-rarity) 270deg,#fff 290deg,var(--rm-rarity) 310deg,transparent 350deg)!important;
+ content:""!important;position:absolute!important;inset:0!important;
+ box-sizing:border-box!important;border-radius:inherit!important;padding:4px!important;
+ background:linear-gradient(110deg,transparent 20%,var(--rm-rarity) 42%,#fff 50%,var(--rm-rarity) 58%,transparent 80%)!important;
+ background-size:260% 100%!important;
  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;
  -webkit-mask-composite:xor!important;
  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;
  mask-composite:exclude!important;
  pointer-events:none!important;z-index:3!important;
- animation:rmStableBorderSpin 5s linear infinite!important;
- transform-origin:center center!important;will-change:transform!important;
+ transform:none!important;will-change:background-position!important;
+ animation:rmBorderGlint 4s linear infinite!important;
 }
-@keyframes rmStableBorderSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes rmBorderGlint{0%{background-position:130% 0}100%{background-position:-130% 0}}
 #equipArtOverlay .rm-legend-panel.rm-detail-rarity:not(.rm-detail-enchanted)::before{content:none!important}
 @media(prefers-reduced-motion:reduce){#equipArtOverlay .rm-legend-panel.rm-detail-enchanted::before{animation:none!important}}
 </style><style id="gem-art-detail-style">.rm-legend-gem-art{width:100%;height:100%;object-fit:contain;display:block}.rm-legend-gem{overflow:hidden}</style><style id="profile-gear-art-v2-style">
