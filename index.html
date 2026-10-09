@@ -2752,7 +2752,15 @@ function toggleAdminGodMode(){if(!isAdmin)return;adminGodMode=!adminGodMode;toas
 function toggleAdminInstaKill(){if(!isAdmin)return;adminInstaKill=!adminInstaKill;toast(adminInstaKill?'💀 Insta Kill ADM ativado.':'Insta Kill ADM desativado.');renderAdminPanel()}
 async function adminSendWorldAnnouncement(){if(!isAdmin)return;let inp=document.getElementById('adminAnnouncement'),msg=inp?.value.trim(),secs=Number(document.getElementById('adminAnnouncementSeconds')?.value||300),repeat=!!document.getElementById('adminAnnouncementRepeat')?.checked;if(!msg)return toast('Digite a mensagem do anúncio.');let payload=repeat?'[REPEAT] '+msg:msg,{error}=await sb.rpc('admin_world_announcement_seconds',{p_message:payload,p_seconds:secs});if(error)return toast('Falha ao publicar: '+error.message);inp.value='';toast(repeat?'📢 Anúncio publicado com lembrete a cada minuto!':'📢 Anúncio mundial publicado!');checkWorldAnnouncement()}
 async function adminSearchPlayers(){
-  if(!isAdmin)return;let q=document.getElementById('adminSearch').value.trim();let {data,error}=await sb.rpc('admin_search_players',{p_query:q});let box=document.getElementById('adminResults');if(error)return box.innerHTML='<div class="item">Erro ao buscar jogadores.</div>';
+  if(!isAdmin)return;let q=document.getElementById('adminSearch').value.trim();let {data,error}=await sb.rpc('admin_search_players',{p_query:q});let box=document.getElementById('adminResults');if(error){console.error('ADM search:',error);return box.innerHTML='<div class="item">Erro ao buscar jogadores: '+escapeHtml(error.message||'Falha na consulta')+'</div>'}
+  data=Array.isArray(data)?data:[];
+  // The current administrator's character is already available in the authenticated session.
+  // Include it only for this account, without exposing other players or bypassing server permissions.
+  const ownName=String(P?.name||P?.nick||P?.character_name||'').trim();
+  const ownEmail=String(onlineUser?.email||'');
+  if(onlineUser?.id&&ownName&&(!q||ownName.toLowerCase().includes(q.toLowerCase())||ownEmail.toLowerCase().includes(q.toLowerCase()))&&!data.some(x=>x.user_id===onlineUser.id)){
+    data.unshift({user_id:onlineUser.id,character_name:ownName,level:P.level||1,class_name:P.cls||'',email:ownEmail});
+  }
   box.innerHTML=(data||[]).map(x=>'<div class="adminPlayer"><b>'+escapeHtml(x.character_name||'Herói')+'</b> • Nv.'+x.level+' • '+escapeHtml(x.class_name||'')+'<div style="color:var(--muted);font-size:11px">'+escapeHtml(x.email||'')+'</div><div class="adminActions"><button class="smallbtn good" onclick="adminReward(\''+x.user_id+'\')">🎁 Premiar moedas</button><button class="smallbtn" onclick="adminItemComposer(\''+x.user_id+'\',\''+escapeHtml(x.character_name||'Herói')+'\')">📦 Enviar equipamento</button><button class="smallbtn" onclick="adminPetComposer(\''+x.user_id+'\',\''+escapeHtml(x.character_name||'Herói')+'\')">🐾 Enviar Pet / Ovo</button><button class="smallbtn" onclick="adminMute(\''+x.user_id+'\')">🔇 Silenciar</button><button class="smallbtn danger" onclick="adminBan(\''+x.user_id+'\')">⛔ Banir</button><button class="smallbtn" onclick="adminUnban(\''+x.user_id+'\')">✅ Desbanir</button></div></div>').join('')||'<div class="item">Nenhum jogador encontrado.</div>'
 }
 let adminRewardTarget=null,adminRewardSending=false;
