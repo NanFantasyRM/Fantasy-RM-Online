@@ -2218,7 +2218,16 @@ openEquipArtDetail=function(kind,key){
  actions.className='rm-bag-detail-actions';
  if(kind==='bag'){
   const btns=[
-   ['⚔️ Equipar',()=>equip(i),P.level<itemRequiredLevel(x)],
+   ['⚔️ Equipar',()=>{
+     const current=P.bag[i];
+     if(!current){toast('Item nao encontrado na mochila.');return}
+     if(P.level<itemRequiredLevel(current)){toast('🔒 Requer nivel '+itemRequiredLevel(current)+'.');return}
+     if(!classCanUseItem(current)){toast('⛔ Item exclusivo para '+current.classTarget+'. Sua classe: '+P.cls+'.');return}
+     equip(i);
+     saveGame(false);
+     closeEquipArtDetail();
+     renderBag();
+   },false],
    ['💎 Encantar',()=>enchant(i)],
    ['🎲 Rolar atributos',()=>rerollBagItem(i)],
    ['🧿 Gerenciar gemas',()=>socketRuneBag(i)],
@@ -2226,7 +2235,7 @@ openEquipArtDetail=function(kind,key){
    ['🪙 Vender',()=>sell(i)],
    ['🔨 Quebrar',()=>breakItem(i)]
   ];
-  btns.forEach(([label,fn,disabled])=>{const b=document.createElement('button');b.className='smallbtn';b.textContent=label;b.disabled=!!disabled;b.onclick=()=>{if(label.includes('Encantar')||label.includes('Gerenciar gemas')){fn();return}closeEquipArtDetail();fn()};actions.appendChild(b)});
+  btns.forEach(([label,fn,disabled])=>{const b=document.createElement('button');b.className='smallbtn';b.textContent=label;b.disabled=!!disabled;b.onclick=()=>{if(label.includes('Encantar')||label.includes('Gerenciar gemas')||label.includes('Equipar')){fn();return}closeEquipArtDetail();fn()};actions.appendChild(b)});
  }else{
   const b=document.createElement('button');b.className='smallbtn';b.textContent='↩️ Desequipar';b.onclick=()=>{closeEquipArtDetail();unequip(key)};actions.appendChild(b);
  }
