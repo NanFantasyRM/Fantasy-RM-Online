@@ -1585,7 +1585,7 @@ body.login-mode{background:#030914}
 @media(prefers-reduced-motion:reduce){.rmDeleteCard{animation:none}}
 </style><style id="rmJourneyFixStyle">#rmJourney:not([hidden]){display:grid!important}#rmJourney[hidden]{display:none!important}#rmJourney .rmJourneyCard{position:relative;z-index:2147483001}#rmJourneyGo{cursor:pointer}</style><style id="rmJourneyHelpStyle">
 #rmJourneyHelp{position:fixed!important;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);z-index:2147482000;border:2px solid #9cdbff;border-radius:18px;padding:12px 15px;background:linear-gradient(135deg,#10284d,#1668bd);box-shadow:0 0 20px #31baffaa,0 0 38px #328cff77;color:white;font-weight:900;font-size:15px;display:none;align-items:center;gap:9px;cursor:pointer}
-#rmJourneyHelp.rmJourneyPending{display:flex!important;animation:rmTutorialBlink 1.1s ease-in-out infinite}
+#rmJourneyHelp.rmJourneyPending,body.game-mode #rmJourneyHelp{display:flex!important;animation:rmTutorialBlink 1.1s ease-in-out infinite}
 #rmJourneyHelp .rmBookIcon{font-size:28px;filter:drop-shadow(0 0 7px #a4e9ff)}
 #rmJourneyHelp .rmTutorialLabel{display:flex;flex-direction:column;text-align:left;line-height:1.15}
 #rmJourneyHelp .rmTutorialLabel small{font-size:10px;color:#a9e5ff;letter-spacing:.5px;margin-top:3px}
@@ -3057,11 +3057,12 @@ function bootJourney(){
  const btn=document.createElement('button');btn.id='rmJourneyHelp';btn.type='button';btn.innerHTML='<span class="rmBookIcon">📖</span><span class="rmTutorialLabel">TUTORIAL<small>TOQUE PARA APRENDER</small></span>';btn.title='Abrir tutorial pendente';btn.onclick=()=>{
   const p=getP();if(!p)return toast('Entre em um personagem primeiro.');
   const st=state();const m=milestones.find(x=>p.level>=x.lv&&!st[x.key]?.done);
-  if(!m)return toast('📘 Nenhum tutorial pendente neste nível.');
+  if(!m)return toast(p.level<5?'📘 O tutorial de encantamento será liberado no nível 5.':'📘 Você já concluiu os tutoriais disponíveis.');
   if(st[m.key]?.seen){st[m.key].seen=false;try{saveGame(true)}catch(e){}}
   show(m,st[m.key]?.step||0);
  };
  document.body.appendChild(btn);
+ document.body.classList.toggle('rmJourneyBooted',true);
  setInterval(()=>{try{window.rmJourneyCheck()}catch(e){console.warn('Tutorial book:',e)}},2500);
  setTimeout(()=>{try{window.rmJourneyCheck()}catch(e){console.error('Jornada inicial:',e)}},1200);
 }
