@@ -1193,6 +1193,25 @@ body.login-mode:after{opacity:.82!important;background-image:radial-gradient(cir
  100%{background-position:-100% 0,200% 100%,0 -100%,100% 200%}
 }
 @media(prefers-reduced-motion:reduce){#equipArtOverlay .rm-legend-panel.rm-detail-enchanted::before{animation:none!important}}
+</style><style id="rm-detail-border-fixed-scroll-v5">
+/* Painel imovel com conteudo rolavel: evita a faixa que acompanhava o scroll. */
+#equipArtOverlay .equip-art-panel.rm-legend-panel{overflow:hidden!important;overflow-y:hidden!important;display:flex!important;flex-direction:column!important;max-height:88dvh!important;position:relative!important}
+#equipArtOverlay .rm-detail-scroll-content{overflow-y:auto;overflow-x:hidden;min-height:0;flex:1;scrollbar-width:thin;position:relative;z-index:1;padding:0 3px 8px}
+#equipArtOverlay .rm-legend-panel.rm-detail-enchanted::before{
+ content:""!important;position:absolute!important;inset:0!important;
+ border:0!important;border-radius:inherit!important;padding:3px!important;
+ background:conic-gradient(from var(--rm-detail-orbit),transparent 0deg,var(--rm-rarity) 35deg,#fff 50deg,var(--rm-rarity) 65deg,transparent 90deg,transparent 220deg,var(--rm-rarity) 260deg,transparent 295deg)!important;
+ background-size:100% 100%!important;background-repeat:no-repeat!important;background-position:center!important;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;
+ -webkit-mask-composite:xor!important;
+ mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;
+ mask-composite:exclude!important;
+ animation:rmDetailOrbit 3s linear infinite!important;
+ pointer-events:none!important;z-index:4!important;transform:none!important;
+ box-shadow:none!important;opacity:1!important;
+}
+#equipArtOverlay .rm-legend-panel.rm-detail-enchanted::after{content:none!important}
+@media(prefers-reduced-motion:reduce){#equipArtOverlay .rm-legend-panel.rm-detail-enchanted::before{animation:none!important}}
 </style></head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon">🌙💰✨</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="logo">FantasyRM</div><div class="sub">⚔️ Idle RPG • Reino de Aetheria • ⚔️</div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
@@ -2183,6 +2202,11 @@ openEquipArtDetail=function(kind,key){
   const b=document.createElement('button');b.className='smallbtn';b.textContent='↩️ Desequipar';b.onclick=()=>{closeEquipArtDetail();unequip(key)};actions.appendChild(b);
  }
  panel.appendChild(actions);
+ // A moldura fica fixa; somente o conteudo interno rola.
+ const scroll=document.createElement('div');
+ scroll.className='rm-detail-scroll-content';
+ while(panel.firstChild)scroll.appendChild(panel.firstChild);
+ panel.appendChild(scroll);
  // Sincroniza a borda do detalhe com a raridade exibida, inclusive itens antigos.
  const legend=panel.classList.contains('rm-legend-panel')?panel:panel.querySelector('.rm-legend-panel');
  if(legend){
