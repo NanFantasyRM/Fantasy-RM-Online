@@ -1441,6 +1441,31 @@ body.login-mode{background:#030914}
 .evoBurst{position:absolute;width:130vmax;height:130vmax;max-width:none;background:repeating-conic-gradient(from 0deg,#d9a4ff33 0deg 3deg,transparent 4deg 18deg);mask-image:radial-gradient(circle,transparent 0%,black 10%,transparent 63%);animation:evoSpin 13s linear infinite,evoFlash 1.3s ease-out both}
 @keyframes evoSpin{to{transform:rotate(360deg)}}@keyframes evoPulse{to{filter:brightness(1.4);box-shadow:0 0 35px #c8a0ff}}@keyframes evoModalIn{from{opacity:0;transform:scale(.76) translateY(25px)}to{opacity:1;transform:scale(1) translateY(0)}}@keyframes evoFlash{from{opacity:1;filter:brightness(3)}to{opacity:.65;filter:brightness(1)}}
 @media(prefers-reduced-motion:reduce){.evoModal,.evoModal:before,.evoPortrait:before,.evoBurst,.evoConfirm{animation:none}}
+</style><style>
+#breakRarityOverlay{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:16px;background:#030610d9;backdrop-filter:blur(8px)}
+#breakRarityOverlay.visible{display:flex}
+.breakForgeCard{position:relative;isolation:isolate;width:min(420px,100%);max-height:calc(100dvh - 28px);overflow-y:auto;text-align:center;padding:23px 20px;border:1px solid var(--breakAccent);border-radius:22px;background:radial-gradient(ellipse at 50% 0%,#30314b,#111626 53%,#080d18);box-shadow:0 0 22px color-mix(in srgb,var(--breakAccent) 45%,transparent),inset 0 0 24px #ffffff0d;animation:breakForgeEnter .35s ease-out}
+.breakForgeCard:before{content:'';position:absolute;inset:5px;border:1px solid #ffffff16;border-radius:17px;pointer-events:none}
+.breakForgeEmblem{display:grid;place-items:center;width:76px;height:76px;margin:0 auto 12px;border-radius:20px;border:1px solid var(--breakAccent);font-size:39px;background:#151d32;box-shadow:0 0 22px color-mix(in srgb,var(--breakAccent) 45%,transparent);animation:breakForgeGlow 2s ease-in-out infinite alternate}
+.breakForgeEyebrow{color:var(--breakAccent);font-size:10px;font-weight:900;letter-spacing:2px}
+.breakForgeCard h2{font-size:21px;color:white;margin:9px 0}
+.breakForgeSub{font-size:12px;color:#acb8d3;margin:0 0 17px}
+.breakForgeStats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.breakForgeStats>div{padding:12px 6px;border:1px solid #ffffff21;border-radius:13px;background:#070e1dbb}
+.breakForgeStats small{display:block;color:#9aa9c3;font-size:10px;letter-spacing:1px}
+.breakForgeStats strong{display:block;color:white;font-size:25px;margin-top:5px}
+.breakForgeStats .breakForgeRarity{color:var(--breakAccent);font-size:21px}
+.breakForgeArrow{color:var(--breakAccent);font-size:22px;margin:9px 0;text-shadow:0 0 15px var(--breakAccent)}
+.breakForgeRewards{border:1px solid #76a9f16b;border-radius:13px;background:#1224408c;padding:10px 13px}
+.breakForgeRewards>div{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;padding:6px 0;font-size:12px;color:#dbeaff}
+.breakForgeRewards strong{color:#80edff;font-size:20px;white-space:nowrap}
+.breakForgeWarning{font-size:11px;color:#ffb7a8;margin:15px 0}
+.breakForgeActions{display:flex;flex-direction:column;gap:9px}
+.breakForgeConfirm{border:1px solid #ffe5a1;border-radius:12px;padding:13px;color:#281d0a;font-size:14px;font-weight:900;background:linear-gradient(110deg,#f5ae50,#ffe6a0,#ed9c38);box-shadow:0 0 16px #f5a84d66;cursor:pointer}
+.breakForgeCancel{border:1px solid #65718c;border-radius:11px;padding:11px;background:#141b2c;color:#e3e8f3;cursor:pointer}
+@keyframes breakForgeEnter{from{opacity:0;transform:scale(.9) translateY(14px)}to{opacity:1;transform:none}}
+@keyframes breakForgeGlow{to{box-shadow:0 0 35px color-mix(in srgb,var(--breakAccent) 75%,transparent)}}
+@media(prefers-reduced-motion:reduce){.breakForgeCard,.breakForgeEmblem{animation:none}}
 </style></head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon"><span>🌙</span><span>✦</span><span>🪙</span></div><div class="offlineEyebrow">TESOUROS DA SUA JORNADA</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="loginCrest" aria-hidden="true">✦ <span>⚔</span> ✦</div><div class="loginOverline">✧ O REINO DE AETHERIA AGUARDA ✧</div><div class="logo">FantasyRM <span class="loginOnline">ONLINE</span></div><div class="sub">Forje seu destino. Conquiste o impossível.</div><div class="loginDivider"><span>✦</span></div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
@@ -2104,7 +2129,30 @@ function confirmRerollWindow(){let x=rerollTargetItem();if(!x)return;let cost=Ma
 function rerollBagItem(i){openRerollWindow('bag',i)}
 function rerollEquipped(slot){openRerollWindow('equipped',slot)}
 function sellRarity(rarity){let items=P.bag.filter(x=>x.rar===rarity);if(!items.length)return toast('Nenhum item '+rarity+' no inventário.');let total=items.reduce((a,x)=>a+Number(x.value||0),0);if(!confirm('Vender '+items.length+' item(ns) '+rarity+' por '+total+' ouro?'))return;P.bag=P.bag.filter(x=>x.rar!==rarity);P.gold+=total;saveGame(false);toast('🪙 '+items.length+' item(ns) vendidos por '+total+' ouro.');renderBag();update()}
-function breakRarity(rarity){let items=P.bag.filter(x=>x.rar===rarity);if(!items.length)return toast('Nenhum item '+rarity+' no inventário.');let per=Math.max(1,rar.findIndex(r=>r[0]===rarity)+1),total=items.length*per;if(!confirm('Quebrar '+items.length+' item(ns) '+rarity+' e receber '+total+' pedra(s)?'))return;P.bag=P.bag.filter(x=>x.rar!==rarity);P.stones+=total;let abyss=rarity==='Abissal'?items.reduce((a,x)=>a+Math.max(1,1+Math.floor(Number(x.enchant||0)/5)),0):0;if(abyss)P.abyssStones=Number(P.abyssStones||0)+abyss;saveGame(false);toast('🔨 '+items.length+' item(ns) quebrados: +'+total+' pedra(s)'+(abyss?' • 🩸 +'+abyss+' Pedra(s) Abissal(is)':'')+'.');renderBag();update()}
+let pendingRarityBreak=null;
+function breakRarity(rarity){
+ const items=P.bag.filter(x=>x.rar===rarity);
+ if(!items.length)return toast('Nenhum item '+rarity+' no inventário.');
+ const per=Math.max(1,rar.findIndex(r=>r[0]===rarity)+1),total=items.length*per;
+ const abyss=rarity==='Abissal'?items.reduce((sum,x)=>sum+Math.max(1,1+Math.floor(Number(x.enchant||0)/5)),0):0;
+ pendingRarityBreak={rarity,ids:items.map(x=>x.id),count:items.length};
+ let el=document.getElementById('breakRarityOverlay');
+ if(!el){el=document.createElement('div');el.id='breakRarityOverlay';document.body.appendChild(el)}
+ const colors={Branco:'#e1e6f0',Verde:'#5ef2a0',Azul:'#65baff',Roxo:'#c585ff',Amarelo:'#ffe16c',Laranja:'#ff9e54',Abissal:'#ff516d'};
+ el.innerHTML='<div class="breakForgeCard" style="--breakAccent:'+(colors[rarity]||'#b9cfff')+'"><div class="breakForgeEmblem">⚒️</div><div class="breakForgeEyebrow">✦ FORJA DE DESMANTELAMENTO ✦</div><h2>QUEBRAR EQUIPAMENTOS</h2><p class="breakForgeSub">Transforme equipamentos em materiais de aprimoramento.</p><div class="breakForgeStats"><div><small>EQUIPAMENTOS</small><strong>'+items.length+'</strong></div><div><small>RARIDADE</small><strong class="breakForgeRarity">'+rarity+'</strong></div></div><div class="breakForgeArrow">✦ ↓ ✦</div><div class="breakForgeRewards"><div><span>💎 Pedras de encantamento</span><strong>+'+total+'</strong></div>'+(abyss?'<div><span>🩸 Pedras Abissais</span><strong>+'+abyss+'</strong></div>':'')+'</div><p class="breakForgeWarning">⚠️ Os equipamentos serão destruídos permanentemente.</p><div class="breakForgeActions"><button class="breakForgeConfirm" onclick="confirmBreakRarity()">⚒️ CONFIRMAR QUEBRA</button><button class="breakForgeCancel" onclick="closeBreakRarity()">Cancelar</button></div></div>';
+ el.classList.add('visible');
+}
+function closeBreakRarity(){const el=document.getElementById('breakRarityOverlay');if(el)el.classList.remove('visible');pendingRarityBreak=null}
+function confirmBreakRarity(){
+ const pending=pendingRarityBreak;if(!pending||!P)return;
+ const rarity=pending.rarity,items=P.bag.filter(x=>x.rar===rarity);
+ if(items.length!==pending.count){closeBreakRarity();return toast('Inventário alterado. Confira a quebra novamente.')}
+ const per=Math.max(1,rar.findIndex(r=>r[0]===rarity)+1),total=items.length*per;
+ const abyss=rarity==='Abissal'?items.reduce((sum,x)=>sum+Math.max(1,1+Math.floor(Number(x.enchant||0)/5)),0):0;
+ P.bag=P.bag.filter(x=>x.rar!==rarity);P.stones+=total;
+ if(abyss)P.abyssStones=Number(P.abyssStones||0)+abyss;
+ closeBreakRarity();saveGame(false);toast('⚒️ '+items.length+' itens quebrados: +'+total+' pedras'+(abyss?' • +'+abyss+' abissais':'')+'.');renderBag();update();
+}
 function unequip(slot){normalizeEquipment();slot=normalizeSlot(slot);let x=P.equip[slot];if(!x)return;if(P.bag.length>=60)return toast('Inventário cheio.');P.bag.push(x);delete P.equip[slot];toast(x.name+' foi para o Inventário.');renderBag();update()}
 function enchantCostInfo(x){let next=Number(x.enchant||0)+1;if(next>20)return null;if(next<=15)return {kind:'normal',cost:Math.max(1,Math.ceil(next*1.35))};if(x.rar!=='Abissal')return {kind:'blocked',cost:0};return {kind:'abyss',cost:Math.max(1,next-15)}}function enchantSuccessRate(current){let target=Number(current||0)+1;if(target<=5)return 100;if(target<=10)return Math.max(50,100-(target-5)*10);if(target<=15)return Math.max(25,50-(target-10)*5);if(target<=20)return Math.max(7.5,25-(target-15)*3.5);return 0}
 function enchantGuarantee(x){return Math.min(100,Math.max(0,Number(x.enchantPity||0))*20)}
