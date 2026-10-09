@@ -2496,9 +2496,22 @@ async function submitAdminReward(){
  if(g+c+st===0){status.textContent='Informe ao menos um recurso para enviar.';return}
  adminRewardSending=true;const btn=document.querySelector('.rm-admin-reward-send');if(btn){btn.disabled=true;btn.textContent='Enviando...'}status.textContent='';
  try{
- const {error}=await sb.rpc('admin_grant_currency',{p_target:adminRewardTarget,p_gold:g,p_crystals:c,p_stones:st});
+ const target=adminRewardTarget;
+ const before=await sb.from('player_saves').select('player').eq('user_id',target).maybeSingle();
+ if(before.error)throw new Error('Não foi possível consultar o saldo anterior: '+before.error.message);
+ if(!before.data?.player)throw new Error('O jogador selecionado não possui um personagem salvo.');
+ const previous=before.data.player;
+ const {error}=await sb.rpc('admin_grant_currency',{p_target:target,p_gold:g,p_crystals:c,p_stones:st});
  if(error)throw error;
- adminRewardSending=false;closeAdminReward();toast('🎁 Recompensa enviada com sucesso!');loadAdminLogs();
+ const after=await sb.from('player_saves').select('player').eq('user_id',target).maybeSingle();
+ if(after.error)throw new Error('O servidor respondeu, mas não foi possível conferir o saldo: '+after.error.message);
+ const current=after.data?.player;
+ if(!current)throw new Error('Não foi possível confirmar o personagem de destino.');
+ const checks=[['gold',g,'ouro'],['crystals',c,'cristais'],['stones',st,'pedras']];
+ const missing=checks.filter(([key,amount])=>amount>0&&Number(current[key]||0)<Number(previous[key]||0)+amount);
+ if(missing.length)throw new Error('O servidor não confirmou o crédito de '+missing.map(x=>x[2]).join(', ')+'. Verifique a função admin_grant_currency no Supabase. Não reenvie antes de conferir o saldo para evitar duplicidade.');
+ if(onlineUser?.id===target&&P){P.gold=current.gold;P.crystals=current.crystals;P.stones=current.stones;update()}
+ adminRewardSending=false;closeAdminReward();toast('🎁 Recursos confirmados no saldo do jogador!');loadAdminLogs();
  }catch(e){adminRewardSending=false;status.textContent='Não foi possível enviar: '+(e?.message||'erro desconhecido');if(btn){btn.disabled=false;btn.textContent='🎁 Enviar recompensa'}}
 }
 const admSpecialDefs=[['none','Sem status',''],['critChance','Crítico','%'],['critDamage','Dano Crítico','%'],['dodge','Esquiva','%'],['accuracy','Precisão','%'],['hpBonus','HP Máx.',''],['mpBonus','Mana Máx.',''],['hpRegen','Recup. HP','/tick'],['mpRegen','Recup. MP','/tick'],['expBonus','EXP','%']];
