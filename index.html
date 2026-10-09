@@ -1529,6 +1529,19 @@ body.login-mode{background:#030914}
 .rmJourneyTarget{outline:3px solid #70caff!important;box-shadow:0 0 22px #39b7ff!important;animation:rmJourneyPulse 1s infinite alternate}
 @keyframes rmJourneyPulse{to{box-shadow:0 0 38px #87eaff,0 0 16px #87eaff!important}}
 @keyframes rmJourneyAppear{from{opacity:0;transform:scale(.87)}to{opacity:1;transform:scale(1)}}
+</style><style id="rmClassUnlockStyle">
+.rmClassUnlockOverlay{position:fixed;inset:0;z-index:2147483100;background:radial-gradient(circle,#122d52dd,#02040df2 72%);display:grid;place-items:center;padding:18px}
+.rmClassUnlockCard{position:relative;isolation:isolate;overflow:hidden;text-align:center;width:min(430px,100%);max-height:92dvh;overflow-y:auto;border:2px solid #eac06c;border-radius:24px;background:linear-gradient(160deg,#162b4c,#080e20 78%);box-shadow:0 0 65px #e2a94a66,0 0 22px #46a9ff88;padding:24px 18px;color:#f4f7ff;animation:rmClassUnlockIn .55s ease-out}
+.rmClassUnlockHalo{position:absolute;z-index:-1;inset:-80%;background:conic-gradient(transparent,#dca33a55,transparent,#398eff55,transparent);animation:rmClassUnlockSpin 9s linear infinite}
+.rmClassUnlockLabel{color:#f5d384;letter-spacing:2px;font-size:12px;font-weight:900;text-shadow:0 0 14px #ffcf65}
+.rmClassUnlockArt{height:190px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 18px #ffdb82)}
+.rmClassUnlockArt img{height:100%;width:auto;max-width:100%;object-fit:contain}
+.rmClassUnlockCard h2{font-size:23px;color:#fff1c1;text-shadow:0 0 17px #ffd17c;margin:8px 0}
+.rmClassUnlockLevel{font-weight:900;color:#7ccfff;letter-spacing:3px}
+.rmClassUnlockCard p{line-height:1.5;color:#dbe7fa}
+.rmClassUnlockCard button{padding:14px 20px;width:100%;background:linear-gradient(110deg,#ad7424,#e9b65b,#9c621b);color:#16111a;border:1px solid #ffe6a0;border-radius:13px;font-size:16px;font-weight:900;box-shadow:0 0 23px #e7b45266}
+@keyframes rmClassUnlockSpin{to{transform:rotate(360deg)}}@keyframes rmClassUnlockIn{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.rmClassUnlockHalo,.rmClassUnlockCard{animation:none}}
 </style></head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon"><span>🌙</span><span>✦</span><span>🪙</span></div><div class="offlineEyebrow">TESOUROS DA SUA JORNADA</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="loginCrest" aria-hidden="true">✦ <span>⚔</span> ✦</div><div class="loginOverline">✧ O REINO DE AETHERIA AGUARDA ✧</div><div class="logo">FantasyRM <span class="loginOnline">ONLINE</span></div><div class="sub">Forje seu destino. Conquiste o impossível.</div><div class="loginDivider"><span>✦</span></div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
@@ -2841,12 +2854,45 @@ function state(){const p=getP();if(!p)return null;p.journeyTutorial=p.journeyTut
 function completed(m){return !!state()?.[m.key]?.done}
 function show(m,step=0){const p=getP();if(!p)return;active=m;let o=document.getElementById('rmJourney');if(!o){o=document.createElement('div');o.id='rmJourney';document.body.appendChild(o)}o.hidden=false;const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));o.innerHTML='<div class="rmJourneyCard"><div class="rmJourneyIcon">'+m.icon+'</div><div class="rmJourneySteps">JORNADA DO AVENTUREIRO • NÍVEL '+m.lv+'</div><h2>'+esc(m.title)+'</h2><p>'+esc(m.description)+'</p><p><strong>Missão:</strong> '+esc(m.steps[Math.min(step,m.steps.length-1)])+'</p><button type="button" id="rmJourneyGo">Começar tutorial</button></div>';document.getElementById('rmJourneyGo').onclick=()=>{o.hidden=true;const st=state();st[m.key]=st[m.key]||{step:0};st[m.key].seen=true;try{saveGame(true)}catch(e){};hint(m)}}
 function hint(m){const st=state()?.[m.key];if(!st||st.done)return;const step=st.step||0;let msg=m.steps[Math.min(step,m.steps.length-1)];try{toast('📘 Tutorial: '+msg)}catch(e){};document.querySelectorAll('.rmJourneyTarget').forEach(x=>x.classList.remove('rmJourneyTarget'));let q=(m.key==='gems'&&step===0)?'[onclick*="showTab(\\'shop\\')"]':(m.key==='enchant'&&step===0)?'[onclick*="showTab(\\'bag\\')"]':null;if(q)try{document.querySelector(q)?.classList.add('rmJourneyTarget')}catch(e){}}
-function advance(key,n){const st=state();if(!st||!st[key]||st[key].done)return;st[key].step=Math.max(st[key].step||0,n);const m=milestones.find(x=>x.key===key);if(st[key].step>=m.steps.length){st[key].done=true;active=null;document.querySelectorAll('.rmJourneyTarget').forEach(x=>x.classList.remove('rmJourneyTarget'));try{toast('✨ Tutorial concluído: '+m.title);saveGame(false)}catch(e){}}else{hint(m);try{saveGame(true)}catch(e){}}}
+function advance(key,n){const st=state();if(!st||!st[key]||st[key].done)return;st[key].step=Math.max(st[key].step||0,n);const m=milestones.find(x=>x.key===key);if(st[key].step>=m.steps.length){st[key].done=true;active=null;document.querySelectorAll('.rmJourneyTarget').forEach(x=>x.classList.remove('rmJourneyTarget'));try{toast('✨ Tutorial concluído: '+m.title);saveGame(false)}catch(e){};setTimeout(()=>window.rmJourneyCheck(),400)}else{hint(m);try{saveGame(true)}catch(e){}}}
 window.rmJourneyAction=function(action){const p=getP();if(!p)return;if(action==='bag'){advance('enchant',1);if(state()?.gems?.step===2)hint(milestones[1])}if(action==='shop')advance('gems',1);if(action==='gemBought')advance('gems',2);if(action==='dungeon')advance('dungeon',1);if(action==='party')advance('dungeon',2);if(action==='petDungeon')advance('pets',1);if(action==='egg')advance('pets',2);if(action==='petSummoned')advance('pets',3)};
-window.rmJourneyCheck=function(){const p=getP();if(!p||!p.level)return;if(p!==lastPlayer){lastPlayer=p;lastLevel=p.level}const st=state();const m=milestones.find(x=>p.level>=x.lv&&!st[x.key]?.done&&!st[x.key]?.seen);if(m)show(m);lastLevel=p.level};
+window.rmJourneyCheck=function(){const p=getP();if(!p||!p.level)return;if(p!==lastPlayer){lastPlayer=p;lastLevel=p.level}const st=state();const m=milestones.find(x=>p.level>=x.lv&&!st[x.key]?.done&&!st[x.key]?.seen);if(m)show(m);else checkClassUnlocks();lastLevel=p.level};
 window.rmJourneyEnchant=function(){advance('enchant',3)};
 window.rmJourneyGemSocket=function(){advance('gems',3)};
-window.rmJourneyDungeonWin=function(){advance('dungeon',3)};
+window.rmJourneyDungeonWin=function(){advance('dungeon',3);setTimeout(()=>window.rmJourneyCheck(),500)};
+function classEvolutionPending(lv,p){if(lv===20)return !p.classBranch;if(lv===40)return !!p.classBranch&&!p.classEvo40;return true}
+function showClassUnlock(lv){
+ const p=getP(),st=state();if(!p||!st)return;
+ const key='class'+lv;
+ if(st[key]?.seen||document.getElementById('rmJourney')?.hidden===false||document.getElementById('classEvolutionOverlay')?.classList.contains('evoVisible'))return;
+ const names={20:'ESCOLHA SUA SUBCLASSE',40:'SEGUNDO DESPERTAR',80:'TERCEIRO DESPERTAR',120:'DESPERTAR SUPREMO'};
+ const descriptions={20:'Você conquistou o direito de escolher sua primeira ramificação! Cada caminho possui habilidades exclusivas.',40:'Sua especialização pode evoluir novamente e desbloquear cinco novas habilidades.',80:'Você atingiu o nível de um grande herói! Confira a área de Evolução de Classe para acompanhar sua próxima etapa.',120:'Seu poder alcançou o nível supremo! Confira a área de Evolução de Classe para acompanhar a etapa final.'};
+ const o=document.createElement('div');o.id='rmClassUnlock';o.className='rmClassUnlockOverlay';
+ const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const art=(typeof profileAvatarHtml==='function'?profileAvatarHtml(p):'');
+ o.innerHTML='<div class="rmClassUnlockCard"><div class="rmClassUnlockHalo"></div><div class="rmClassUnlockLabel">✦ EVOLUÇÃO DESBLOQUEADA ✦</div><div class="rmClassUnlockArt">'+art+'</div><h2>'+names[lv]+'</h2><div class="rmClassUnlockLevel">NÍVEL '+lv+'</div><p>'+esc(descriptions[lv])+'</p><button type="button" id="rmClassUnlockContinue">👑 VER EVOLUÇÃO</button></div>';
+ document.body.appendChild(o);
+ document.getElementById('rmClassUnlockContinue').onclick=()=>{
+  st[key]={seen:true};o.remove();try{saveGame(true)}catch(e){}
+  if(lv===20||lv===40)try{showTab('class')}catch(e){}
+  else try{showTab('class');toast('👑 Evolução Nv.'+lv+': acompanhe as próximas ramificações nesta área.')}catch(e){}
+  setTimeout(()=>window.rmJourneyCheck(),600);
+ };
+}
+function checkClassUnlocks(){
+ const p=getP(),st=state();if(!p||!st||document.getElementById('rmClassUnlock'))return;
+ const dungeon=st.dungeon;
+ for(const lv of [20,40,80,120]){
+  if(p.level<lv)continue;
+  const key='class'+lv;
+  if(st[key]?.seen)continue;
+  if(!classEvolutionPending(lv,p)){st[key]={seen:true};continue}
+  if(lv===20&&(!dungeon?.done))return;
+  if(lv>20&&p.level>=20&&!p.classBranch)return;
+  if(lv>40&&p.level>=40&&!p.classEvo40)return;
+  showClassUnlock(lv);return;
+ }
+}
 const observer=new MutationObserver(()=>{const p=getP();if(p&&p.level!==lastLevel){lastLevel=p.level;window.rmJourneyCheck()}});document.addEventListener('DOMContentLoaded',()=>{observer.observe(document.body,{childList:true,subtree:false});setTimeout(window.rmJourneyCheck,1800)});
 })();
 </script></body></html>
