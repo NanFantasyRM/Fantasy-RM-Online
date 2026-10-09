@@ -2209,7 +2209,57 @@ function confirmRmDeleteDialog(){
  if(input?.value.trim().toUpperCase()!=='EXCLUIR')return;
  closeRmDeleteDialog();window.rmDeleteApproved=true;deleteCharacter();
 }
-async function deleteCharacter(){if(!P)return;let name=P.name||P.cls;if(!window.rmDeleteApproved){openRmDeleteDialog();return}window.rmDeleteApproved=false;characterDeleteInProgress=true;if(timer){clearInterval(timer);timer=null}try{let uid=onlineUser?.id;if(uid&&sb){let {error,count}=activeCharacterSlot===1?await sb.from('player_saves').delete({count:'exact'}).eq('user_id',uid):await sb.from('player_character_slots').delete({count:'exact'}).eq('user_id',uid).eq('slot',activeCharacterSlot);if(error)throw error;if(count===0)throw new Error('O servidor bloqueou a exclusão do personagem (DELETE/RLS).');if(activeCharacterSlot===1){try{await sb.from('party_members').delete().eq('user_id',uid)}catch(_){}try{await sb.from('raid_members').delete().eq('user_id',uid)}catch(_){}try{await sb.from('pvp_ranking').delete().eq('user_id',uid)}catch(_){}}}try{localStorage.removeItem(saveKey(currentUser));if(uid)localStorage.removeItem(saveKey(uid))}catch(_){}P=null;E=null;D={active:false,bossIndex:0,bar:5};W={active:false,bar:7};if(cloudSaveTimer){clearTimeout(cloudSaveTimer);cloudSaveTimer=null}setScreenMode('select');document.getElementById('login').classList.add('hidden');document.getElementById('game').classList.add('hidden');document.getElementById('select').classList.remove('hidden');let hn=document.getElementById('heroName');if(hn)hn.value='';renderChars();toast('🗑️ Personagem excluído permanentemente. Crie um novo herói.');setTimeout(()=>{characterDeleteInProgress=false},1500)}catch(e){console.warn('Falha exclusão:',e);characterDeleteInProgress=false;if(P&&!timer)timer=setInterval(tick,900);toast('❌ Não foi possível excluir: '+(e.message||e))}}
+async function deleteCharacter(){
+ if(!P)return;
+ if(!window.rmDeleteApproved){openRmDeleteDialog();return}
+ window.rmDeleteApproved=false;
+ if(characterDeleteInProgress)return;
+ const deletingSlot=Number(activeCharacterSlot||1),uid=onlineUser?.id,oldP=P;
+ characterDeleteInProgress=true;
+ if(timer){clearInterval(timer);timer=null}
+ try{
+  if(uid&&sb){
+   const table=deletingSlot===1?'player_saves':'player_character_slots';
+   let query=sb.from(table).delete({count:'exact'}).eq('user_id',uid);
+   if(deletingSlot>1)query=query.eq('slot',deletingSlot);
+   const {error,count}=await query;
+   if(error)throw error;
+   if(count===0){
+    const check=deletingSlot===1?await sb.from(table).select('user_id').eq('user_id',uid).maybeSingle():await sb.from(table).select('slot').eq('user_id',uid).eq('slot',deletingSlot).maybeSingle();
+    if(check.error)throw check.error;
+    if(check.data)throw new Error('O banco não autorizou a exclusão. Verifique a política DELETE no Supabase.');
+   }
+   if(deletingSlot===1){
+    try{await sb.from('party_members').delete().eq('user_id',uid)}catch(_){}
+    try{await sb.from('raid_members').delete().eq('user_id',uid)}catch(_){}
+    try{await sb.from('pvp_ranking').delete().eq('user_id',uid)}catch(_){}
+   }
+  }else{
+   try{localStorage.removeItem(saveKey(currentUser))}catch(_){}
+  }
+  if(cloudSaveTimer){clearTimeout(cloudSaveTimer);cloudSaveTimer=null}
+  P=null;E=null;D={active:false,bossIndex:0,bar:5};W={active:false,bar:7};
+  if(uid&&sb){
+   characterSlotRows[deletingSlot]=null;
+   await showCharacterSlots();
+   renderCharacterSlotCarousel(deletingSlot);
+  }else{
+   setScreenMode('select');
+   document.getElementById('login').classList.add('hidden');
+   document.getElementById('game').classList.add('hidden');
+   document.getElementById('select').classList.remove('hidden');
+   renderChars();
+  }
+  toast('🗑️ Personagem excluído. Espaço '+deletingSlot+' liberado.');
+ }catch(e){
+  console.warn('Falha exclusão:',e);
+  P=oldP;
+  if(P&&!timer)timer=setInterval(tick,900);
+  toast('❌ Não foi possível excluir: '+(e.message||e));
+ }finally{
+  characterDeleteInProgress=false;
+ }
+}
 function addStat(s,amount=1){amount=Math.max(1,Math.floor(Number(amount)||1));if(P.statPts<amount)return toast('Você precisa de '+amount+' pontos de status. Disponíveis: '+P.statPts+'.');P.statPts-=amount;P.spentStatPts=Number(P.spentStatPts||0)+amount;let gain=s.includes('Max')?10*amount:amount;P[s]+=gain;if(s==='hpMax')P.hp+=gain;if(s==='mpMax')P.mp+=gain;toast('+'+amount+' ponto(s) em '+({atk:'Ataque',def:'Defesa',agi:'Agilidade',int:'Inteligência',hpMax:'Vida Máxima',mpMax:'Mana Máxima'})[s]+' • PC de Status +'+(amount*statPointPowerAtLevel(P.level)).toLocaleString('pt-BR'));renderCharacter();update()}
 const runeDefs={physAtk:{name:'Rubi do Ataque',icon:'🔴',suffix:''},magAtk:{name:'Ametista Arcana',icon:'🟣',suffix:''},hpBonus:{name:'Esmeralda da Vitalidade',icon:'💚',suffix:''},mpBonus:{name:'Safira de Mana',icon:'🔷',suffix:''},critChance:{name:'Topázio Crítico',icon:'🟠',suffix:'%'},critDamage:{name:'Granada da Destruição',icon:'♦️',suffix:'%'},expBonus:{name:'Ampulheta da Experiência',icon:'⏳',suffix:'%'},accuracy:{name:'Diamante da Precisão',icon:'💎',suffix:'%'},dodge:{name:'Opala da Esquiva',icon:'🤍',suffix:'%'}};
 function runeSlots(x){let i=rar.findIndex(r=>r[0]===x?.rar);return Math.max(1,i+1)}
