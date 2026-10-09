@@ -1404,6 +1404,13 @@ body.login-mode{background:#030914}
 @media(max-width:420px){#login.login .loginbox{padding:28px 19px 22px!important}.loginCrest span{width:65px;height:65px;font-size:31px}.loginOverline{font-size:9px;letter-spacing:1.4px}}
 @media(prefers-reduced-motion:reduce){#login.login .logo{animation:none!important}}
 </style>
+<style>
+/* Attack VFX fix: never anchor projectiles to wall; JS animation controls trajectory */
+.battle .attackProjectile{left:0;top:0;bottom:auto!important;animation:none!important;transition:none!important;will-change:transform,opacity;z-index:16!important;line-height:1;pointer-events:none}
+.battle .attackProjectile.magic{filter:drop-shadow(0 0 8px var(--pc)) drop-shadow(0 0 18px var(--pc))}
+.battle .attackProjectile.arrow{filter:drop-shadow(0 0 9px #8dffbd);font-weight:900}
+.battle .attackProjectile.melee{filter:drop-shadow(0 0 10px var(--pc))}
+</style>
 </head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon"><span>🌙</span><span>✦</span><span>🪙</span></div><div class="offlineEyebrow">TESOUROS DA SUA JORNADA</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="loginCrest" aria-hidden="true">✦ <span>⚔</span> ✦</div><div class="loginOverline">✧ O REINO DE AETHERIA AGUARDA ✧</div><div class="logo">FantasyRM <span class="loginOnline">ONLINE</span></div><div class="sub">Forje seu destino. Conquiste o impossível.</div><div class="loginDivider"><span>✦</span></div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
@@ -1845,9 +1852,10 @@ let sx=hr.left-br.left-battle.clientLeft+hr.width*.78-pw*.5;
 let sy=hr.top-br.top-battle.clientTop+hr.height*.62-ph*.5;
 let ex=mr?mr.left-br.left-battle.clientLeft+mr.width*.28-pw*.5:sx+220;
 let ey=mr?mr.top-br.top-battle.clientTop+mr.height*.55-ph*.5:sy;
-p.style.left=sx+'px';p.style.top=sy+'px';p.style.bottom='auto';p.style.transform='none';
-if(kind==='melee'){p.style.transitionDuration='.28s'}
-requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.left=ex+'px';p.style.top=ey+'px';p.style.transform=kind==='melee'?'rotate(35deg) scale(1.2)':'scale(1.12)';p.style.opacity='.15'}));
+p.style.setProperty('left',sx+'px','important');p.style.setProperty('top',sy+'px','important');p.style.setProperty('bottom','auto','important');p.style.transition='none';p.style.opacity='1';p.style.transform='none';
+const dx=ex-sx,dy=ey-sy,duration=kind==='melee'?300:440;
+const travel=p.animate([{transform:'translate(0px,0px) scale(.7)',opacity:.9,offset:0},{transform:'translate('+dx*.55+'px,'+dy*.55+'px) scale(1.18)',opacity:1,offset:.55},{transform:'translate('+dx+'px,'+dy+'px) scale(.95)',opacity:.05,offset:1}],{duration,easing:'cubic-bezier(.18,.7,.3,1)',fill:'forwards'});
+travel.onfinish=()=>p.remove();
 runner.classList.add('basicAttack');setTimeout(()=>{mob?.classList.add('hitFlash')},260);setTimeout(()=>{p.remove();runner.classList.remove('basicAttack');mob?.classList.remove('hitFlash')},520)}
 function onlineArenaActuallyOpen(){let ca=document.getElementById('coopArena'),ra=document.getElementById('raidArena');return !!((coopDungeonViewing&&ca&&!ca.classList.contains('hidden'))||(raidArenaSessionId&&ra&&!ra.classList.contains('hidden')))}
 function clearStaleBattleLocks(){let ca=document.getElementById('coopArena'),ra=document.getElementById('raidArena');if(coopDungeonViewing&&(!ca||ca.classList.contains('hidden')))coopDungeonViewing=null;if(raidArenaSessionId&&(!ra||ra.classList.contains('hidden')))raidArenaSessionId=null}
