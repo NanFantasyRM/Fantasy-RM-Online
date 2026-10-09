@@ -2461,6 +2461,11 @@ const _equippedCardArt=equippedCard;equippedCard=function(slot,x){const html=_eq
 .remoteProfileGear .remoteGearSlot img.remoteGearArt{display:block;width:auto;max-width:100%;height:auto;max-height:46px;object-fit:contain;margin:0 auto;filter:drop-shadow(0 0 3px rgba(130,170,255,.25))}
 .remoteProfileGear .remoteGearSlot .remoteGearLabel,.remoteProfileGear .remoteGearSlot .remoteGearItem{max-width:100%;line-height:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .remoteProfileGear .remoteGearSlot .remoteGearEnchant{position:absolute;right:6px;top:4px}
+
+/* Pet de batalha: companheiro pequeno, visivel a frente e ao lado do heroi */
+.battle .petFighter{left:36%!important;bottom:157px!important;z-index:12!important;pointer-events:none!important}
+.battle .petFighter .petBattleArt{width:76px!important;height:76px!important;object-fit:contain!important}
+@media(max-width:900px){.battle .petFighter{left:35%!important;bottom:157px!important;z-index:12!important}.battle .petFighter .petBattleArt{width:63px!important;height:63px!important}}
 </style><div id="rmLogoutOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="rmLogoutTitle"><div class="rmLogoutCard"><div class="rmLogoutIcon">🚪</div><h2 id="rmLogoutTitle">Sair do Reino?</h2><p>Você está prestes a encerrar sua sessão no <strong>Fantasy RM Online</strong>.</p><div class="rmLogoutSafe">☁️ Seu personagem e seu progresso continuarão salvos na nuvem.</div><div class="rmLogoutActions"><button type="button" class="rmLogoutCancel" onclick="closeLogoutPopup()">Continuar jogando</button><button type="button" class="rmLogoutConfirm" id="rmLogoutConfirm" onclick="confirmLogoutOnline()">Sair da conta</button></div></div></div></body></html>
 <!-- redeploy production: hero title alignment -->
 
