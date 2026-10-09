@@ -129,6 +129,9 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 /* v2.15 — título ancorado visualmente à cabeça do herói */
 @media(max-width:900px){.heroTitle{left:calc(7% + 56px)!important;right:auto!important;top:auto!important;bottom:312px!important;transform:translateX(-50%)!important;max-width:none!important;width:max-content!important;text-align:center!important;white-space:nowrap!important;z-index:9!important}}
 
+/* Ajuste: titulo acima da cabeca, sem sobrepor cabelo ou rosto */
+@media(max-width:900px){.heroTitle{bottom:382px!important;left:calc(7% + 56px)!important;top:auto!important}}
+
 /* Login v3 — portal de entrada Fantasy RM */
 .login{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% 30%,#183b68 0,#0c1a31 34%,#060b16 72%,#03060d 100%);min-height:100vh}
 .login:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 20% 20%,#4a7cff22 0 2px,transparent 3px),radial-gradient(circle at 80% 30%,#ffc85725 0 1px,transparent 2px),radial-gradient(circle at 35% 75%,#6fd3ff20 0 2px,transparent 3px);background-size:90px 90px,120px 120px,150px 150px;opacity:.8}
