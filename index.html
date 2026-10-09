@@ -1484,6 +1484,23 @@ body.login-mode{background:#030914}
 .rm-loot-bulk-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rm-loot-bulk-actions button{background:#1b304e;color:#e8f1ff;border:1px solid #476c9c;border-radius:10px;padding:11px 5px;font-weight:700;font-size:12px}
 @media(max-width:390px){.rm-loot-head,.rm-loot-row{grid-template-columns:minmax(65px,1fr) repeat(3,minmax(43px,1fr))}.rm-loot-head{font-size:9px}.rm-loot-panel{padding:10px}}
+</style><style>
+#rmAdminRewardModal{position:fixed;inset:0;z-index:2147483646;background:#030816d9;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(7px)}
+#rmAdminRewardModal.visible{display:flex}
+.rm-admin-reward-card{position:relative;width:min(100%,430px);max-height:calc(100dvh - 32px);overflow-y:auto;border:1px solid #6689c5;border-radius:21px;background:linear-gradient(150deg,#192c4b,#0a1427 80%);box-shadow:0 0 38px #367af344,0 24px 65px #000b;padding:22px;color:#eef5ff;text-align:center}
+.rm-admin-reward-close{position:absolute;right:12px;top:12px;background:#203655;border:1px solid #5b7294;border-radius:50%;width:32px;height:32px;color:#fff}
+.rm-admin-reward-icon{font-size:42px;filter:drop-shadow(0 0 14px #79bfff)}
+.rm-admin-reward-kicker{color:#7dc8ff;font-size:10px;font-weight:800;letter-spacing:2px;margin-top:7px}
+.rm-admin-reward-card h2{margin:7px 0;font-size:24px;color:#fff;text-shadow:0 0 13px #4d9cff88}
+.rm-admin-reward-card p{font-size:12px;color:#afc2de;line-height:1.5;margin:6px 0 16px}
+.rm-admin-reward-fields{display:grid;gap:10px;text-align:left}
+.rm-admin-reward-fields label{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#101e34;border:1px solid #304f77;border-radius:12px;padding:9px 11px;font-size:13px;font-weight:700}
+.rm-admin-reward-fields input{width:42%;min-width:95px;background:#071223;color:#fff;border:1px solid #4e729f;border-radius:8px;padding:10px 8px;font-size:16px;text-align:right}
+#rmRewardStatus{color:#ff9aa7;font-size:12px;min-height:19px;margin:10px 0 2px}
+.rm-admin-reward-actions{display:grid;gap:9px;margin-top:7px}
+.rm-admin-reward-send{padding:13px;background:linear-gradient(100deg,#2670d2,#6c4dc8);border:1px solid #83b7ff;border-radius:11px;color:#fff;font-weight:800}
+.rm-admin-reward-send:disabled{opacity:.55}
+.rm-admin-reward-cancel{padding:10px;background:#162640;border:1px solid #3b5577;border-radius:10px;color:#c5d5ec}
 </style></head><body class="login-mode">
 <div id="rerollOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">🎲🔒</div><h2>ROLAGEM DE STATUS</h2><div id="rerollBody"></div><div class="updateActions"><button id="rerollConfirmBtn" class="primary" onclick="confirmRerollWindow()">🎲 ROLAR STATUS</button><button class="smallbtn" onclick="closeRerollWindow()">Fechar</button></div></div></div><div id="offlineRewardOverlay" class="updateOverlay hidden"><div class="updateCard offlineRewardCard"><div class="offlineRewardIcon"><span>🌙</span><span>✦</span><span>🪙</span></div><div class="offlineEyebrow">TESOUROS DA SUA JORNADA</div><h2>RECOMPENSA OFFLINE</h2><div id="offlineRewardBody"></div><div class="updateActions"><button class="primary" onclick="claimOfflineReward()">🎁 RECEBER RECOMPENSA</button></div></div></div><div id="updateOverlay" class="updateOverlay hidden"><div class="updateCard"><div class="updateBadge">✨📢✨</div><h2>NOVIDADES DO FANTASYRM</h2><div id="updateVersion" class="updateVersion"></div><div id="updateBody"></div><div class="updateActions"><button class="primary" onclick="closeUpdateNews()">✓ ENTENDI / FECHAR NOVIDADES</button></div></div></div><div id="login" class="screen login"><div class="loginStars"></div><div class="card loginbox"><div class="loginBorderGlow" aria-hidden="true"></div><div class="loginCrest" aria-hidden="true">✦ <span>⚔</span> ✦</div><div class="loginOverline">✧ O REINO DE AETHERIA AGUARDA ✧</div><div class="logo">FantasyRM <span class="loginOnline">ONLINE</span></div><div class="sub">Forje seu destino. Conquiste o impossível.</div><div class="loginDivider"><span>✦</span></div><input id="user" type="email" placeholder="E-mail"><input id="pass" type="password" placeholder="Senha (mín. 6 caracteres)"><button class="primary" onclick="login()">ENTRAR NO REINO</button><button class="smallbtn" style="margin-top:8px" onclick="registerOnline()">CRIAR CONTA</button><div class="sub" id="onlineState">Configure o Supabase para ativar login e save na nuvem</div></div></div>
 <div id="select" class="screen hidden"><div class="top"><b>FANTASY RM</b><span>Selecione seu herói</span></div><div class="selectWrap"><h1>Seleção de Personagem</h1><p style="color:var(--muted)">Escolha uma classe para personalizar seu herói.</p><div id="chars" class="chars"></div></div></div>
@@ -2461,7 +2478,29 @@ async function adminSearchPlayers(){
   if(!isAdmin)return;let q=document.getElementById('adminSearch').value.trim();let {data,error}=await sb.rpc('admin_search_players',{p_query:q});let box=document.getElementById('adminResults');if(error)return box.innerHTML='<div class="item">Erro ao buscar jogadores.</div>';
   box.innerHTML=(data||[]).map(x=>'<div class="adminPlayer"><b>'+escapeHtml(x.character_name||'Herói')+'</b> • Nv.'+x.level+' • '+escapeHtml(x.class_name||'')+'<div style="color:var(--muted);font-size:11px">'+escapeHtml(x.email||'')+'</div><div class="adminActions"><button class="smallbtn good" onclick="adminReward(\''+x.user_id+'\')">🎁 Premiar moedas</button><button class="smallbtn" onclick="adminItemComposer(\''+x.user_id+'\',\''+escapeHtml(x.character_name||'Herói')+'\')">📦 Enviar equipamento</button><button class="smallbtn" onclick="adminPetComposer(\''+x.user_id+'\',\''+escapeHtml(x.character_name||'Herói')+'\')">🐾 Enviar Pet / Ovo</button><button class="smallbtn" onclick="adminMute(\''+x.user_id+'\')">🔇 Silenciar</button><button class="smallbtn danger" onclick="adminBan(\''+x.user_id+'\')">⛔ Banir</button><button class="smallbtn" onclick="adminUnban(\''+x.user_id+'\')">✅ Desbanir</button></div></div>').join('')||'<div class="item">Nenhum jogador encontrado.</div>'
 }
-async function adminReward(uid){let g=Number(prompt('Ouro para conceder:','1000')||0),c=Number(prompt('Cristais para conceder:','100')||0),s=Number(prompt('Pedras para conceder:','10')||0);if(g<0||c<0||s<0)return toast('Valores inválidos.');let {error}=await sb.rpc('admin_grant_currency',{p_target:uid,p_gold:Math.floor(g),p_crystals:Math.floor(c),p_stones:Math.floor(s)});toast(error?'Falha ao premiar.':'🎁 Recompensa enviada.');loadAdminLogs()}
+let adminRewardTarget=null,adminRewardSending=false;
+function adminReward(uid){
+ if(!isAdmin||!uid)return;
+ adminRewardTarget=uid;adminRewardSending=false;
+ let el=document.getElementById('rmAdminRewardModal');if(!el){el=document.createElement('div');el.id='rmAdminRewardModal';document.body.appendChild(el)}
+ el.innerHTML='<div class="rm-admin-reward-card" role="dialog" aria-modal="true" aria-label="Conceder recursos"><button type="button" class="rm-admin-reward-close" onclick="closeAdminReward()">✕</button><div class="rm-admin-reward-icon">🎁</div><div class="rm-admin-reward-kicker">PAINEL ADMINISTRATIVO</div><h2>Enviar recursos</h2><p>Conceda moedas e materiais ao jogador selecionado. Deixe em zero os recursos que não deseja enviar.</p><div class="rm-admin-reward-fields"><label><span>🪙 Ouro</span><input id="rmRewardGold" type="number" inputmode="numeric" min="0" max="1000000000" step="1" value="0"></label><label><span>💎 Cristais</span><input id="rmRewardCrystals" type="number" inputmode="numeric" min="0" max="1000000000" step="1" value="0"></label><label><span>🔷 Pedras de encantamento</span><input id="rmRewardStones" type="number" inputmode="numeric" min="0" max="1000000000" step="1" value="0"></label></div><div id="rmRewardStatus" aria-live="polite"></div><div class="rm-admin-reward-actions"><button type="button" class="rm-admin-reward-send" onclick="submitAdminReward()">🎁 Enviar recompensa</button><button type="button" class="rm-admin-reward-cancel" onclick="closeAdminReward()">Cancelar</button></div></div>';
+ el.classList.add('visible');
+}
+function closeAdminReward(){if(adminRewardSending)return;document.getElementById('rmAdminRewardModal')?.classList.remove('visible');adminRewardTarget=null}
+async function submitAdminReward(){
+ if(!isAdmin||!adminRewardTarget||adminRewardSending)return;
+ const ids=['rmRewardGold','rmRewardCrystals','rmRewardStones'],values=ids.map(id=>document.getElementById(id)?.value.trim()??'');
+ const status=document.getElementById('rmRewardStatus');
+ if(values.some(v=>v===''||!/^(0|[1-9][0-9]*)$/.test(v)||!Number.isSafeInteger(Number(v))||Number(v)>1000000000)){status.textContent='Informe quantidades inteiras entre 0 e 1 bilhão.';return}
+ const [g,c,st]=values.map(Number);
+ if(g+c+st===0){status.textContent='Informe ao menos um recurso para enviar.';return}
+ adminRewardSending=true;const btn=document.querySelector('.rm-admin-reward-send');if(btn){btn.disabled=true;btn.textContent='Enviando...'}status.textContent='';
+ try{
+ const {error}=await sb.rpc('admin_grant_currency',{p_target:adminRewardTarget,p_gold:g,p_crystals:c,p_stones:st});
+ if(error)throw error;
+ adminRewardSending=false;closeAdminReward();toast('🎁 Recompensa enviada com sucesso!');loadAdminLogs();
+ }catch(e){adminRewardSending=false;status.textContent='Não foi possível enviar: '+(e?.message||'erro desconhecido');if(btn){btn.disabled=false;btn.textContent='🎁 Enviar recompensa'}}
+}
 const admSpecialDefs=[['none','Sem status',''],['critChance','Crítico','%'],['critDamage','Dano Crítico','%'],['dodge','Esquiva','%'],['accuracy','Precisão','%'],['hpBonus','HP Máx.',''],['mpBonus','Mana Máx.',''],['hpRegen','Recup. HP','/tick'],['mpRegen','Recup. MP','/tick'],['expBonus','EXP','%']];
 function adminSpecialLimit(){let r=document.getElementById('admItemRarity')?.value,idx=rar.findIndex(x=>x[0]===r);return idx===4?3:idx===5?4:idx===6?5:idx>=7?6:Math.min(1,Math.max(0,idx-1))}
 function adminRenderSpecials(){let box=document.getElementById('admSpecialSlots');if(!box)return;let n=adminSpecialLimit(),opts=admSpecialDefs.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');box.innerHTML=n?Array.from({length:n},(_,i)=>'<div class="item" style="padding:8px"><b>✦ Status especial '+(i+1)+'</b><div class="grid2" style="margin-top:6px"><label>Atributo<select id="admSpKey'+i+'">'+opts+'</select></label><label>Valor<input id="admSpVal'+i+'" type="number" min="0" max="999999" value="10"></label></div></div>').join(''):'<div class="sub">Esta raridade não possui slots especiais.</div>'}
