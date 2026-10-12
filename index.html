@@ -222,6 +222,10 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 .kingdomMapPin.kingdomActivating{animation:kingdomBuildingTap .42s ease-out both!important}
 @keyframes kingdomBuildingTap{0%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.13);filter:drop-shadow(0 0 14px #ffd06c)}100%{transform:translate(-50%,-50%) scale(1.05)}}
 @media(max-width:480px){.kingdomMapPin{width:31%!important;height:13%!important}.kingdomSitePreview{bottom:1%!important}}
+
+/* Escala visual uniforme conforme a montagem enviada */
+.kingdomMapScene .kingdomMapPin{width:33%!important;height:15%!important}
+@media(max-width:480px){.kingdomMapScene .kingdomMapPin{width:33%!important;height:15%!important}}
 </style>
 <style>
 /* HUD top v3 — teste de publicação */
@@ -2366,10 +2370,10 @@ document.addEventListener('click',e=>{if(!e.target.closest('.moreWrap'))closeMor
 function renderKingdomTown(){
  if(!P)return;
  const sites=[
- ['Amigos','Amigos.png','friends',17,39],['Arena PvP','Arena.png','pvp',49,24],['Boss Mundial','Boss Mundial.png','world',85,28],
- ['Correio','Correio.png','mail',17,55],['Dungeons','Dungeons.png','dungeon',50,51],['Evolução','Evolução.png','class',85,42],
- ['Guilda','Guilda.png','guild',84,69],['Loja','Loja.png','shop',84,83],['Missões','Missões.png','quests',50,69],
- ['Pets','Pets.png','pets',18,83],['Ranking','Ranking.png','ranking',50,91],['Skills','Skills.png','skills',17,25]
+ ['Amigos','Amigos.png','friends',18,39],['Arena PvP','Arena.png','pvp',49,24],['Boss Mundial','Boss Mundial.png','world',85,28],
+ ['Correio','Correio.png','mail',18,55],['Dungeons','Dungeons.png','dungeon',53,51],['Evolução','Evolução.png','class',85,42],
+ ['Guilda','Guilda.png','guild',85,69],['Loja','Loja.png','shop',85,83],['Missões','Missões.png','quests',53,69],
+ ['Pets','Pets.png','pets',18,83],['Ranking','Ranking.png','ranking',52,91],['Skills','Skills.png','skills',18,25]
  ];
  const base='assets/icones-cidade/';
  tab.innerHTML='<div class="kingdomActions"><h2 class="kingdomHeading">🏰 Cidade do Reino</h2><button class="smallbtn" onclick="showTab(\'character\')">⚔️ Voltar</button></div><div class="kingdomMapScene" aria-label="Mapa interativo da Cidade do Reino">'+sites.map(([name,file,dest,x,y])=>'<button type="button" class="kingdomMapPin" style="left:'+x+'%;top:'+y+'%" aria-label="Visitar '+name+'" title="'+name+'" onclick="kingdomTownGo(\''+dest+'\',this)"><img src="'+base+encodeURIComponent(file)+'" alt="'+name+'" loading="lazy"></button>').join('')+'<div id="kingdomSitePreview" class="kingdomSitePreview" hidden></div></div><p class="kingdomHint">Toque em uma construção para entrar diretamente.</p>';
