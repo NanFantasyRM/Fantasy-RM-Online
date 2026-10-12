@@ -1685,7 +1685,7 @@ body.login-mode{background:#030914}
 @media(max-width:480px){#socialCard .remoteProfileGear{padding:17px 4px 13px;border-radius:15px}#socialCard .remoteProfileGear::before{width:66%;left:17%;top:10%}#socialCard .remoteStatGrid{padding:7px;gap:6px}}
 </style><style>
 /* Cidade do Reino: ícones oficiais, animações leves e responsivas */
-.kingdomIcons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:1050px;margin:14px auto;padding:12px;border-radius:18px;background:radial-gradient(ellipse at center,#263b4d 0%,#141b2b 70%,#10141f 100%);border:1px solid #b69a5866}
+.kingdomIcons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:1050px;margin:14px auto;padding:clamp(12px,3vw,32px);border-radius:18px;background:linear-gradient(#09132422,#09132466),url('assets/icones-cidade/Fundo%20da%20cidade.png') center center / cover no-repeat;border:1px solid #b69a5866;box-shadow:inset 0 0 35px #08142788,0 12px 30px #0006;min-height:460px;align-content:space-evenly}
 .kingdomIcon{position:relative;display:block;width:100%;border:0;background:transparent;padding:0;cursor:pointer;isolation:isolate;transition:transform .2s ease,filter .2s ease;touch-action:manipulation}
 .kingdomIcon img{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 5px 5px #0008);pointer-events:none}
 .kingdomIcon:hover{transform:translateY(-3px);filter:brightness(1.09)}
@@ -1694,7 +1694,7 @@ body.login-mode{background:#030914}
 .kingdomIcon.kingdomActivating:after{content:"";position:absolute;inset:12%;border-radius:50%;pointer-events:none;box-shadow:0 0 20px 8px #ffd66b66,0 0 34px 15px #53b9ff44;animation:kingdomFlash .42s ease-out both;z-index:-1}
 @keyframes kingdomTap{0%{transform:scale(1)}40%{transform:scale(1.09);filter:brightness(1.3)}100%{transform:scale(1.02);filter:brightness(1.1)}}
 @keyframes kingdomFlash{0%{opacity:0;transform:scale(.6)}45%{opacity:1}100%{opacity:0;transform:scale(1.3)}}
-@media(min-width:700px){.kingdomIcons{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:20px}}
+@media(min-width:700px){.kingdomIcons{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:32px;min-height:650px}}
 @media(max-width:380px){.kingdomIcons{gap:6px;padding:7px}}
 @media(prefers-reduced-motion:reduce){.kingdomIcon,.kingdomIcon.kingdomActivating,.kingdomIcon.kingdomActivating:after{animation:none;transition:none}}
 </style></head><body class="login-mode">
