@@ -198,6 +198,21 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 .petReveal .petRevealArt{width:175px;height:175px;max-width:75vw;filter:drop-shadow(0 0 17px #ad8cff)}
 @media(max-width:900px){.petFighter .petBattleArt{width:85px;height:85px}}
 .kingdomMap{position:relative;min-height:680px;border:3px solid #b69a58;border-radius:22px;overflow:hidden;background:radial-gradient(ellipse at center,#d8c88d 0%,#88ad69 55%,#315f59 100%);box-shadow:inset 0 0 65px #153d43,0 8px 25px #0009}.kingdomMap:before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(ellipse at 50% 50%,transparent 0 35px,#416e4130 38px 42px);pointer-events:none}.kingdomPath{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.kingdomSite{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:27%;min-height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#34533dba,#182a3dcf);border:2px solid #e5bd71;border-radius:18px;color:#fff;box-shadow:0 8px 12px #132f2699;text-shadow:0 2px 4px #000;cursor:pointer;padding:6px 2px}.kingdomSite:active{transform:translate(-50%,-50%) scale(.95)}.kingdomSite .building{font-size:clamp(32px,7vw,64px);filter:drop-shadow(0 4px 3px #0008)}.kingdomSite strong{font-size:clamp(10px,2.6vw,14px)}.kingdomSite small{font-size:10px;color:#f7cf81}.kingdomHeading{text-align:center;color:#f9d993;text-shadow:0 2px 4px #000;font-family:Georgia,serif}.kingdomActions{display:flex;justify-content:space-between;align-items:center;gap:8px}.kingdomHint{text-align:center;color:#bdd3ea;font-size:12px;margin:12px 0}@media(min-width:800px){.kingdomMap{min-height:750px}.kingdomSite{width:22%}}@media(max-width:420px){.kingdomMap{min-height:590px}.kingdomSite{min-height:70px}.kingdomSite .building{font-size:35px}}
+
+/* Cidade do Reino — mapa limpo com pontos interativos */
+.kingdomMapScene{position:relative;width:100%;max-width:1050px;aspect-ratio:1/1;margin:16px auto 0;border:1px solid #b69a5877;border-radius:18px;overflow:hidden;background:#17263c url('assets/icones-cidade/Fundo%20da%20cidade.png') center / 100% 100% no-repeat;box-shadow:0 12px 30px #0007}
+.kingdomMapPin{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center;width:clamp(23px,6vw,38px);height:clamp(23px,6vw,38px);padding:0;border:1.5px solid #ffdd8b;border-radius:50%;color:#fff1bb;background:radial-gradient(circle,#2aaeffbb 0%,#173b7bdd 45%,#071b38dd 100%);box-shadow:0 0 0 3px #09152c77,0 0 14px 4px #39aaffaa;cursor:pointer;z-index:1;animation:kingdomPinPulse 2.5s ease-in-out infinite;touch-action:manipulation}
+.kingdomPinCore{font-size:clamp(14px,3.8vw,22px);line-height:1;text-shadow:0 0 9px #fff}
+.kingdomMapPin.selected,.kingdomMapPin:focus-visible{background:#d59b30;box-shadow:0 0 0 4px #10223c,0 0 22px 8px #ffcf63;z-index:3;outline:none}
+@keyframes kingdomPinPulse{0%,100%{filter:brightness(.9)}50%{filter:brightness(1.35)}}
+.kingdomSitePreview{position:absolute;bottom:2%;left:3%;right:3%;display:flex;align-items:center;gap:10px;min-height:76px;padding:9px 12px;border:1px solid #e3b75c;border-radius:14px;background:#07152aee;box-shadow:0 5px 25px #000a;z-index:5;backdrop-filter:blur(9px)}
+.kingdomSitePreview[hidden]{display:none!important}
+.kingdomSitePreview img{width:64px;height:62px;object-fit:contain;flex-shrink:0}
+.kingdomPreviewInfo{display:flex;flex-direction:column;flex:1;min-width:0;color:#fff}
+.kingdomPreviewInfo strong{font-size:15px}.kingdomPreviewInfo span{font-size:11px;color:#9bb7d4}
+.kingdomVisitBtn{border:1px solid #e4b959;background:linear-gradient(135deg,#254c86,#122b55);color:#fff4cf;border-radius:9px;padding:10px;font-weight:700;cursor:pointer}
+.kingdomCloseBtn{position:absolute;right:5px;top:2px;border:0;background:none;color:#b8c8dd;font-size:18px;cursor:pointer}
+@media(max-width:420px){.kingdomSitePreview{gap:5px;padding:6px}.kingdomSitePreview img{width:47px;height:50px}.kingdomVisitBtn{padding:9px 7px}.kingdomPreviewInfo strong{font-size:13px}}
 </style>
 <style>
 /* HUD top v3 — teste de publicação */
@@ -2342,12 +2357,23 @@ document.addEventListener('click',e=>{if(!e.target.closest('.moreWrap'))closeMor
 function renderKingdomTown(){
  if(!P)return;
  const sites=[
- ['Amigos','Amigos.png','friends'],['Arena PvP','Arena.png','pvp'],['Boss Mundial','Boss Mundial.png','world'],['Correio','Correio.png','mail'],
- ['Dungeons','Dungeons.png','dungeon'],['Evolução','Evolução.png','class'],['Guilda','Guilda.png','guild'],['Loja','Loja.png','shop'],
- ['Missões','Missões.png','quests'],['Pets','Pets.png','pets'],['Ranking','Ranking.png','ranking'],['Skills','Skills.png','skills']
+ ['Amigos','Amigos.png','friends',20,20],['Arena PvP','Arena.png','pvp',51,18],['Boss Mundial','Boss Mundial.png','world',85,19],
+ ['Correio','Correio.png','mail',17,39],['Dungeons','Dungeons.png','dungeon',51,44],['Evolução','Evolução.png','class',85,40],
+ ['Guilda','Guilda.png','guild',18,61],['Loja','Loja.png','shop',51,64],['Missões','Missões.png','quests',84,61],
+ ['Pets','Pets.png','pets',18,82],['Ranking','Ranking.png','ranking',51,84],['Skills','Skills.png','skills',84,82]
  ];
  const base='assets/icones-cidade/';
- tab.innerHTML='<div class="kingdomActions"><h2 class="kingdomHeading">🏰 Cidade do Reino</h2><button class="smallbtn" onclick="showTab(\'character\')">⚔️ Voltar</button></div><div class="kingdomIcons">'+sites.map(([name,file,dest])=>'<button type="button" class="kingdomIcon" aria-label="'+name+'" onclick="kingdomTownGo(\''+dest+'\',this)"><img loading="lazy" src="'+base+encodeURIComponent(file)+'" alt="'+name+'"></button>').join('')+'</div><p class="kingdomHint">Toque em uma construção para visitar o local.</p>';
+ tab.innerHTML='<div class="kingdomActions"><h2 class="kingdomHeading">🏰 Cidade do Reino</h2><button class="smallbtn" onclick="showTab(\\'character\\')">⚔️ Voltar</button></div><div class="kingdomMapScene" aria-label="Mapa interativo da Cidade do Reino">'+sites.map(([name,file,dest,x,y])=>'<button type="button" class="kingdomMapPin" style="left:'+x+'%;top:'+y+'%" aria-label="Visitar '+name+'" title="'+name+'" onclick="kingdomTownSelect(\\''+dest+'\\',\\''+name+'\\',\\''+file+'\\',this)"><span class="kingdomPinCore">✦</span></button>').join('')+'<div id="kingdomSitePreview" class="kingdomSitePreview" hidden></div></div><p class="kingdomHint">Toque em um ponto luminoso para escolher o destino.</p>';
+}
+function kingdomTownSelect(dest,name,file,el){
+ document.querySelectorAll('.kingdomMapPin').forEach(x=>x.classList.remove('selected'));
+ el.classList.add('selected');
+ const preview=document.getElementById('kingdomSitePreview');
+ if(!preview)return;
+ preview.hidden=false;
+ preview.innerHTML='<img src="assets/icones-cidade/'+encodeURIComponent(file)+'" alt=""><div class="kingdomPreviewInfo"><strong>'+name+'</strong><span>Local selecionado</span></div><button type="button" class="kingdomVisitBtn">Visitar →</button><button type="button" class="kingdomCloseBtn" aria-label="Fechar">×</button>';
+ preview.querySelector('.kingdomVisitBtn').onclick=()=>kingdomTownGo(dest,el);
+ preview.querySelector('.kingdomCloseBtn').onclick=()=>{preview.hidden=true;el.classList.remove('selected')};
 }
 let kingdomTownBusy=false;
 function kingdomTownGo(t,el){
