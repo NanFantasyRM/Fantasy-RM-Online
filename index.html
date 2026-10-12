@@ -2366,10 +2366,10 @@ document.addEventListener('click',e=>{if(!e.target.closest('.moreWrap'))closeMor
 function renderKingdomTown(){
  if(!P)return;
  const sites=[
- ['Amigos','Amigos.png','friends',19,38],['Arena PvP','Arena.png','pvp',49,24.5],['Boss Mundial','Boss Mundial.png','world',85,26],
- ['Correio','Correio.png','mail',18,54],['Dungeons','Dungeons.png','dungeon',49,47.5],['Evolução','Evolução.png','class',84,41],
- ['Guilda','Guilda.png','guild',18,69],['Loja','Loja.png','shop',84,69],['Missões','Missões.png','quests',84,54],
- ['Pets','Pets.png','pets',18,83],['Ranking','Ranking.png','ranking',50,80],['Skills','Skills.png','skills',84,83]
+ ['Amigos','Amigos.png','friends',18.5,39.8],['Arena PvP','Arena.png','pvp',49,24.5],['Boss Mundial','Boss Mundial.png','world',85,28.1],
+ ['Correio','Correio.png','mail',18.5,55.9],['Dungeons','Dungeons.png','dungeon',50,47.7],['Evolução','Evolução.png','class',84,41],
+ ['Guilda','Guilda.png','guild',19.5,68.4],['Loja','Loja.png','shop',84,69],['Missões','Missões.png','quests',84,54],
+ ['Pets','Pets.png','pets',18,83],['Ranking','Ranking.png','ranking',54,77.5],['Skills','Skills.png','skills',84,83]
  ];
  const base='assets/icones-cidade/';
  tab.innerHTML='<div class="kingdomActions"><h2 class="kingdomHeading">🏰 Cidade do Reino</h2><button class="smallbtn" onclick="showTab(\'character\')">⚔️ Voltar</button></div><div class="kingdomMapScene" aria-label="Mapa interativo da Cidade do Reino">'+sites.map(([name,file,dest,x,y])=>'<button type="button" class="kingdomMapPin" style="left:'+x+'%;top:'+y+'%" aria-label="Visitar '+name+'" title="'+name+'" onclick="kingdomTownSelect(\''+dest+'\',\''+name+'\',\''+file+'\',this)"><img src="'+base+encodeURIComponent(file)+'" alt="'+name+'" loading="lazy"></button>').join('')+'<div id="kingdomSitePreview" class="kingdomSitePreview" hidden></div></div><p class="kingdomHint">Toque em uma construção para escolher o destino.</p>';
