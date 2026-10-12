@@ -216,12 +216,12 @@ body{background:radial-gradient(circle at 50% -20%,#304b80 0,#10182b 30%,#070a12
 
 /* Mapa 2: ilustração vertical e construções PNG clicáveis */
 .kingdomMapScene{aspect-ratio:1024/1536!important;background-image:url('assets/icones-cidade/fundo%20da%20cidade%202.png')!important;background-size:100% 100%!important;background-position:center!important}
-.kingdomMapPin{width:29%!important;height:14%!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;animation:none!important;filter:drop-shadow(0 3px 3px #07102077);transition:transform .22s ease,filter .22s ease;overflow:visible}
+.kingdomMapPin{width:26%!important;height:12%!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;animation:none!important;filter:drop-shadow(0 3px 3px #07102077);transition:transform .22s ease,filter .22s ease;overflow:visible}
 .kingdomMapPin img{width:100%;height:100%;display:block;object-fit:contain;pointer-events:none}
 .kingdomMapPin:hover,.kingdomMapPin:focus-visible,.kingdomMapPin.selected{transform:translate(-50%,-50%) scale(1.08)!important;filter:drop-shadow(0 0 10px #65c8ff) brightness(1.12)!important;background:transparent!important;box-shadow:none!important;outline:none}
 .kingdomMapPin.kingdomActivating{animation:kingdomBuildingTap .42s ease-out both!important}
 @keyframes kingdomBuildingTap{0%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.13);filter:drop-shadow(0 0 14px #ffd06c)}100%{transform:translate(-50%,-50%) scale(1.05)}}
-@media(max-width:480px){.kingdomMapPin{width:31%!important;height:13%!important}.kingdomSitePreview{bottom:1%!important}}
+@media(max-width:480px){.kingdomMapPin{width:28%!important;height:12%!important}.kingdomSitePreview{bottom:1%!important}}
 </style>
 <style>
 /* HUD top v3 — teste de publicação */
@@ -2366,10 +2366,10 @@ document.addEventListener('click',e=>{if(!e.target.closest('.moreWrap'))closeMor
 function renderKingdomTown(){
  if(!P)return;
  const sites=[
- ['Amigos','Amigos.png','friends',19,39],['Arena PvP','Arena.png','pvp',48,25],['Boss Mundial','Boss Mundial.png','world',84,27],
- ['Correio','Correio.png','mail',18,55],['Dungeons','Dungeons.png','dungeon',49,49],['Evolução','Evolução.png','class',84,42],
- ['Guilda','Guilda.png','guild',18,70],['Loja','Loja.png','shop',83,70],['Missões','Missões.png','quests',83,55],
- ['Pets','Pets.png','pets',17,84],['Ranking','Ranking.png','ranking',48,68],['Skills','Skills.png','skills',83,84]
+ ['Amigos','Amigos.png','friends',19,38],['Arena PvP','Arena.png','pvp',49,24.5],['Boss Mundial','Boss Mundial.png','world',85,26],
+ ['Correio','Correio.png','mail',18,54],['Dungeons','Dungeons.png','dungeon',49,47.5],['Evolução','Evolução.png','class',84,41],
+ ['Guilda','Guilda.png','guild',18,69],['Loja','Loja.png','shop',84,69],['Missões','Missões.png','quests',84,54],
+ ['Pets','Pets.png','pets',18,83],['Ranking','Ranking.png','ranking',49,65],['Skills','Skills.png','skills',84,83]
  ];
  const base='assets/icones-cidade/';
  tab.innerHTML='<div class="kingdomActions"><h2 class="kingdomHeading">🏰 Cidade do Reino</h2><button class="smallbtn" onclick="showTab(\'character\')">⚔️ Voltar</button></div><div class="kingdomMapScene" aria-label="Mapa interativo da Cidade do Reino">'+sites.map(([name,file,dest,x,y])=>'<button type="button" class="kingdomMapPin" style="left:'+x+'%;top:'+y+'%" aria-label="Visitar '+name+'" title="'+name+'" onclick="kingdomTownSelect(\''+dest+'\',\''+name+'\',\''+file+'\',this)"><img src="'+base+encodeURIComponent(file)+'" alt="'+name+'" loading="lazy"></button>').join('')+'<div id="kingdomSitePreview" class="kingdomSitePreview" hidden></div></div><p class="kingdomHint">Toque em uma construção para escolher o destino.</p>';
