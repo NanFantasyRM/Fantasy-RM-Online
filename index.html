@@ -2309,13 +2309,29 @@ function arrowSfx(){noise(.07,.018,0,3800);tone(980,.09,'sine',.018,0,'sfx',-650
 function magicSfx(kind='magic'){if(kind==='fire'){noise(.22,.025,0,950);tone(170,.24,'sawtooth',.025,0,'sfx',420);tone(510,.18,'triangle',.014,.05)}else if(kind==='ice'){tone(1150,.12,'sine',.024);tone(1540,.22,'sine',.018,.04,'sfx',-430);noise(.11,.012,.08,5000)}else if(kind==='lightning'){noise(.055,.035,0,6000);tone(95,.055,'square',.032);tone(920,.08,'square',.02,.035,'sfx',-520);noise(.045,.02,.075,5000)}else if(kind==='heal'){tone(523,.22,'sine',.018);tone(659,.25,'sine',.016,.08);tone(784,.3,'sine',.014,.16)}else{tone(260,.18,'sine',.022,0,'sfx',260);tone(520,.16,'triangle',.014,.06)}}
 function uiSfx(kind='click'){if(!audioEnabled)return;if(kind==='crit'){noise(.10,.04,0,2400);tone(110,.12,'square',.03);tone(620,.14,'triangle',.018,.025)}else if(kind==='boss'){tone(62,.42,'sawtooth',.04);noise(.28,.025,.02,700)}else if(kind==='level'){[523,659,784,1047].forEach((n,i)=>tone(n,.32,'sine',.02,i*.09))}else if(kind==='rare'){tone(880,.16,'sine',.018);tone(1175,.22,'sine',.018,.08);tone(1568,.3,'triangle',.014,.16)}else if(kind==='gem'){tone(740,.10,'sine',.015);tone(1110,.18,'sine',.014,.06)}else if(kind==='refine'){noise(.07,.02,0,3200);tone(420,.08,'triangle',.02);tone(760,.15,'sine',.014,.06)}else{tone(420,.055,'sine',.008)}}
 function playAttackSound(skill=''){if(!audioEnabled)return;let n=(skill||'').toLowerCase(),cls=P?.cls||'';if(skill){let fx=skillEffectFor(skill);if(n.includes('cura')||n.includes('bênção')||n.includes('santuário')||n.includes('purificação'))return magicSfx('heal');if(fx.type==='burn'||n.includes('fogo')||n.includes('chama'))return magicSfx('fire');if(fx.type==='freeze'||n.includes('gelo')||n.includes('zero'))return magicSfx('ice');if(fx.type==='shock'||n.includes('raio')||n.includes('trovão'))return magicSfx('lightning');if(fx.type==='stun'){swordSfx(true);tone(70,.2,'square',.02,.04);return}let h=Math.abs(hashSkill(skill)),base=190+(h%430);tone(base,.13,'triangle',.025,0,'sfx',120+(h%180));tone(base*1.45,.17,'sine',.014,.055);noise(.06,.012,.04,2500);return}if(cls==='Arqueiro')arrowSfx();else if(cls==='Mago')magicSfx('magic');else if(cls==='Assassino'){noise(.065,.026,0,2600);tone(250,.065,'sawtooth',.018,0,'sfx',-130);tone(420,.05,'triangle',.012,.045)}else swordSfx(true)}
-function desiredMusicMode(){return D?.active||W?.active||coopDungeonViewing||raidArenaSessionId?'dungeon':'menu'}
-function musicNote(mode){if(!audioEnabled||document.hidden)return;if(mode==='dungeon'){let bass=[82.41,98,110,123.47,82.41,110,130.81,98],f=bass[musicStep%bass.length];tone(f,.38,'sawtooth',.011,0,'music',-8);if(musicStep%2===0){noise(.045,.006,0,650);tone(55,.08,'sine',.01,0,'music')}if(musicStep%4===2)chord([f*2,f*2.5,f*3],.28,.004,.04,'triangle')}else{let roots=[220,196,174.61,196,220,246.94,196,174.61],r=roots[musicStep%roots.length];chord([r,r*1.25,r*1.5],.68,.006,0,'sine');tone(r*2,.34,'triangle',.004,.12,'music',40)}musicStep++}
-function setMusicMode(mode=desiredMusicMode()){if(!audioEnabled)return stopMusic();if(currentMusicMode===mode&&musicTimer)return;stopMusic();currentMusicMode=mode;musicStep=0;musicNote(mode);musicTimer=setInterval(()=>musicNote(mode),mode==='dungeon'?390:720)}
-function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}currentMusicMode=''}
-function toggleAudio(){audioEnabled=!audioEnabled;localStorage.setItem('fantasyRM_audio',audioEnabled?'on':'off');if(audioEnabled){getAudioCtx();setMusicMode()}else stopMusic();toast(audioEnabled?'🔊 Sons e música ativados.':'🔇 Sons e música desativados.');updateAudioButton()}
+// Trilha única enviada pelo criador: exploração, chefes e todas as dungeons.
+const bgmTrack=new Audio('assets/audio/Sleipnir(MP3_320K).mp3');
+bgmTrack.loop=true;
+bgmTrack.preload='none';
+bgmTrack.volume=.28;
+let bgmStarted=false;
+function desiredMusicMode(){return 'all'}
+function stopMusic(){bgmTrack.pause()}
+function setMusicMode(){
+ if(!audioEnabled||document.hidden)return stopMusic();
+ if(!bgmTrack.paused)return;
+ const result=bgmTrack.play();
+ if(result&&typeof result.then==='function')result.then(()=>{bgmStarted=true}).catch(()=>{});
+}
+function toggleAudio(){
+ audioEnabled=!audioEnabled;
+ localStorage.setItem('fantasyRM_audio',audioEnabled?'on':'off');
+ if(audioEnabled){try{getAudioCtx()}catch(e){}setMusicMode()}else stopMusic();
+ toast(audioEnabled?'🔊 Música e efeitos ativados.':'🔇 Música e efeitos desativados.');
+ updateAudioButton();
+}
 function updateAudioButton(){document.querySelectorAll('.audioToggle').forEach(b=>b.textContent=audioEnabled?'🔊 Som':'🔇 Som')}
-document.addEventListener('pointerdown',()=>{if(audioEnabled){getAudioCtx();setMusicMode()}},{once:true});
+document.addEventListener('pointerdown',()=>{if(audioEnabled){try{getAudioCtx()}catch(e){}setMusicMode()}},{once:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopMusic();else if(P)setMusicMode()});
 function attackVisual(skillName){playAttackSound(skillName);let battle=document.querySelector('.battle');if(!battle||!P)return;let cls=P.cls||'',name=(skillName||'').toLowerCase(),icon='💥',kind='magic',color='#ffd45d';if(cls==='Arqueiro'){icon='➶';kind='arrow';color='#8dffbd'}else if(cls==='Mago'){icon=name.includes('gelo')||name.includes('zero')?'❄️':name.includes('raio')?'⚡':'🔥';kind='magic';color=name.includes('gelo')||name.includes('zero')?'#7ee7ff':name.includes('raio')?'#b77cff':'#ff713d'}else if(cls==='Assassino'){icon='⚔️';kind='melee';color='#d58cff'}else if(cls==='Guerreiro'){icon='⚔️';kind='melee';color='#ffd45d'}if(name.includes('cura')||name.includes('bênção')||name.includes('santuário')||name.includes('purificação')){icon='✨';kind='magic';color='#8dffbd'}let p=document.createElement('div');p.className='attackProjectile '+kind;p.textContent=icon;p.style.setProperty('--pc',color);battle.appendChild(p);
 let br=battle.getBoundingClientRect(),hr=runner.getBoundingClientRect(),mr=mob?.getBoundingClientRect();
