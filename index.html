@@ -1789,6 +1789,10 @@ body.login-mode{background:#030914}
 @media(max-width:600px){.battle.expSoloArena .runner{left:3%!important;bottom:34%!important}.battle.expSoloArena .petFighter{left:23%!important;bottom:35%!important}.battle.expSoloArena .mob{right:1%!important;width:55%!important;height:38%!important;bottom:32%!important}.battle.expSoloArena .bars{width:47%!important}.battle.expSoloArena #enemyName{max-width:55%!important}.battle.expSoloArena .battleQuickActions{bottom:140px!important}}
 
 .battle.expSoloArena .mob.stageBossArt{filter:drop-shadow(0 0 18px #a15cffaa)!important}
+/* Título preso visualmente à cabeça do herói nas arenas fullscreen. */
+.battle.petSoloArena #heroTitle,.battle.expSoloArena #heroTitle{top:auto!important;bottom:calc(32% + 185px)!important;left:calc(8% + 58px)!important;right:auto!important;transform:translateX(-50%)!important;width:max-content!important;max-width:45vw!important;text-align:center!important;white-space:nowrap!important;z-index:11!important;pointer-events:none!important}
+@media(max-width:600px){.battle.petSoloArena #heroTitle,.battle.expSoloArena #heroTitle{bottom:calc(34% + 155px)!important;left:calc(3% + 62px)!important;font-size:13px!important;max-width:48vw!important}}
+
 </style><style>
 .rmDgGrantBackdrop{position:fixed;inset:0;z-index:110000;background:#020610dc;display:flex;align-items:center;justify-content:center;padding:16px}
 .rmDgGrantCard{width:min(460px,100%);max-height:92dvh;overflow:auto;padding:22px;border-radius:22px;background:linear-gradient(155deg,#162746,#0a1022 70%);border:1px solid #668dce;box-shadow:0 20px 75px #000c,0 0 30px #547dff33;color:#eef5ff}
