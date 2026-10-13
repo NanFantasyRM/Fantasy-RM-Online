@@ -2309,30 +2309,69 @@ function arrowSfx(){noise(.07,.018,0,3800);tone(980,.09,'sine',.018,0,'sfx',-650
 function magicSfx(kind='magic'){if(kind==='fire'){noise(.22,.025,0,950);tone(170,.24,'sawtooth',.025,0,'sfx',420);tone(510,.18,'triangle',.014,.05)}else if(kind==='ice'){tone(1150,.12,'sine',.024);tone(1540,.22,'sine',.018,.04,'sfx',-430);noise(.11,.012,.08,5000)}else if(kind==='lightning'){noise(.055,.035,0,6000);tone(95,.055,'square',.032);tone(920,.08,'square',.02,.035,'sfx',-520);noise(.045,.02,.075,5000)}else if(kind==='heal'){tone(523,.22,'sine',.018);tone(659,.25,'sine',.016,.08);tone(784,.3,'sine',.014,.16)}else{tone(260,.18,'sine',.022,0,'sfx',260);tone(520,.16,'triangle',.014,.06)}}
 function uiSfx(kind='click'){if(!audioEnabled)return;if(kind==='crit'){noise(.10,.04,0,2400);tone(110,.12,'square',.03);tone(620,.14,'triangle',.018,.025)}else if(kind==='boss'){tone(62,.42,'sawtooth',.04);noise(.28,.025,.02,700)}else if(kind==='level'){[523,659,784,1047].forEach((n,i)=>tone(n,.32,'sine',.02,i*.09))}else if(kind==='rare'){tone(880,.16,'sine',.018);tone(1175,.22,'sine',.018,.08);tone(1568,.3,'triangle',.014,.16)}else if(kind==='gem'){tone(740,.10,'sine',.015);tone(1110,.18,'sine',.014,.06)}else if(kind==='refine'){noise(.07,.02,0,3200);tone(420,.08,'triangle',.02);tone(760,.15,'sine',.014,.06)}else{tone(420,.055,'sine',.008)}}
 function playAttackSound(skill=''){if(!audioEnabled)return;let n=(skill||'').toLowerCase(),cls=P?.cls||'';if(skill){let fx=skillEffectFor(skill);if(n.includes('cura')||n.includes('bênção')||n.includes('santuário')||n.includes('purificação'))return magicSfx('heal');if(fx.type==='burn'||n.includes('fogo')||n.includes('chama'))return magicSfx('fire');if(fx.type==='freeze'||n.includes('gelo')||n.includes('zero'))return magicSfx('ice');if(fx.type==='shock'||n.includes('raio')||n.includes('trovão'))return magicSfx('lightning');if(fx.type==='stun'){swordSfx(true);tone(70,.2,'square',.02,.04);return}let h=Math.abs(hashSkill(skill)),base=190+(h%430);tone(base,.13,'triangle',.025,0,'sfx',120+(h%180));tone(base*1.45,.17,'sine',.014,.055);noise(.06,.012,.04,2500);return}if(cls==='Arqueiro')arrowSfx();else if(cls==='Mago')magicSfx('magic');else if(cls==='Assassino'){noise(.065,.026,0,2600);tone(250,.065,'sawtooth',.018,0,'sfx',-130);tone(420,.05,'triangle',.012,.045)}else swordSfx(true)}
-// Trilha única enviada pelo criador: exploração, chefes e todas as dungeons.
-const bgmTrack=new Audio('assets/audio/Sleipnir(MP3_320K).mp3');
-bgmTrack.loop=true;
-bgmTrack.preload='none';
-bgmTrack.volume=.28;
+// Trilhas por contexto: login, exploração e batalhas especiais.
+const rmBgmFiles={
+ login:'assets/audio/Musica para menu de login.mp3',
+ normal:'assets/audio/Musica para tela normal, mobs normal e cidade.mp3',
+ battle:'assets/audio/Musica para Boss-DG-Boss mudial-DG de guilda.mp3'
+};
+const rmBgmTracks=Object.fromEntries(Object.entries(rmBgmFiles).map(([key,url])=>{
+ const audio=new Audio(encodeURI(url));audio.loop=true;audio.preload='none';audio.volume=0;return [key,audio];
+}));
+let bgmTrack=rmBgmTracks.login;
 let bgmStarted=false;
+let rmCurrentBgmMode=null;
+let rmBgmFadeTimer=null;
+let rmLastGameTab='character';
 const rmAudioRead=(key,fallback)=>{try{const v=localStorage.getItem(key);return v===null?fallback:v}catch(e){return fallback}};
 let rmMusicVolume=Math.max(0,Math.min(100,Number(rmAudioRead('fantasyRM_musicVolume','65'))||0));
 let rmEffectsVolume=Math.max(0,Math.min(100,Number(rmAudioRead('fantasyRM_effectsVolume','85'))||0));
 let rmMusicMuted=rmAudioRead('fantasyRM_musicMuted','false')==='true';
 let rmEffectsMuted=rmAudioRead('fantasyRM_effectsMuted','false')==='true';
+function rmBgmTargetVolume(){return audioEnabled&&!rmMusicMuted?rmMusicVolume/100*.43:0}
 function applyAudioLevels(){
- bgmTrack.volume=audioEnabled&&!rmMusicMuted?rmMusicVolume/100*.43:0;
+ const volume=rmBgmTargetVolume();
+ for(const [key,track] of Object.entries(rmBgmTracks))if(key===rmCurrentBgmMode)track.volume=volume;
  if(musicGain)musicGain.gain.value=audioEnabled&&!rmMusicMuted?rmMusicVolume/100*.55:0;
  if(sfxGain)sfxGain.gain.value=audioEnabled&&!rmEffectsMuted?rmEffectsVolume/100:0;
 }
-function desiredMusicMode(){return 'all'}
-function stopMusic(){bgmTrack.pause()}
+function desiredMusicMode(){
+ if(document.body.classList.contains('login-mode')||document.body.classList.contains('select-mode'))return 'login';
+ if(document.body.classList.contains('game-mode')){
+  const arenaOpen=id=>{const el=document.getElementById(id);return !!el&&!el.classList.contains('hidden')};
+  if((typeof D!=='undefined'&&D?.active)||(typeof W!=='undefined'&&W?.active)||
+     (typeof coopDungeonViewing!=='undefined'&&coopDungeonViewing)||
+     arenaOpen('coopArena')||arenaOpen('raidArena')||
+     (typeof E!=='undefined'&&E&&(E.boss||E.dungeon||E.world||E.guild)))return 'battle';
+  return 'normal';
+ }
+ return 'login';
+}
+function stopMusic(){
+ if(rmBgmFadeTimer){clearInterval(rmBgmFadeTimer);rmBgmFadeTimer=null}
+ Object.values(rmBgmTracks).forEach(track=>track.pause());
+}
 function setMusicMode(){
- applyAudioLevels();
- if(!audioEnabled||document.hidden||rmMusicMuted||rmMusicVolume===0)return stopMusic();
- if(!bgmTrack.paused)return;
- const result=bgmTrack.play();
- if(result&&typeof result.then==='function')result.then(()=>{bgmStarted=true}).catch(()=>{});
+ const mode=desiredMusicMode();
+ if(!audioEnabled||document.hidden||rmMusicMuted||rmMusicVolume===0){stopMusic();return}
+ const next=rmBgmTracks[mode]||rmBgmTracks.normal;
+ if(rmCurrentBgmMode===mode&&!next.paused){applyAudioLevels();return}
+ const previous=rmBgmTracks[rmCurrentBgmMode];
+ if(rmBgmFadeTimer){clearInterval(rmBgmFadeTimer);rmBgmFadeTimer=null}
+ rmCurrentBgmMode=mode;bgmTrack=next;
+ next.volume=0;
+ const play=next.play();
+ if(play&&typeof play.catch==='function')play.catch(()=>{});
+ bgmStarted=true;
+ let step=0;
+ rmBgmFadeTimer=setInterval(()=>{
+  step++;
+  const fraction=Math.min(1,step/12);
+  const target=rmBgmTargetVolume();
+  next.volume=target*fraction;
+  if(previous&&previous!==next)previous.volume=target*(1-fraction);
+  if(fraction>=1){clearInterval(rmBgmFadeTimer);rmBgmFadeTimer=null;if(previous&&previous!==next)previous.pause()}
+ },50);
 }
 function toggleAudio(){
  audioEnabled=!audioEnabled;
@@ -2370,7 +2409,8 @@ function openAudioSettings(){
 }
 applyAudioLevels();
 document.addEventListener('pointerdown',()=>{if(audioEnabled){try{getAudioCtx()}catch(e){}setMusicMode()}},{once:true});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stopMusic();else if(P)setMusicMode()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopMusic();else setMusicMode()});
+setInterval(()=>{if(audioEnabled&&!document.hidden)setMusicMode()},1200);
 function attackVisual(skillName){playAttackSound(skillName);let battle=document.querySelector('.battle');if(!battle||!P)return;let cls=P.cls||'',name=(skillName||'').toLowerCase(),icon='💥',kind='magic',color='#ffd45d';if(cls==='Arqueiro'){icon='➶';kind='arrow';color='#8dffbd'}else if(cls==='Mago'){icon=name.includes('gelo')||name.includes('zero')?'❄️':name.includes('raio')?'⚡':'🔥';kind='magic';color=name.includes('gelo')||name.includes('zero')?'#7ee7ff':name.includes('raio')?'#b77cff':'#ff713d'}else if(cls==='Assassino'){icon='⚔️';kind='melee';color='#d58cff'}else if(cls==='Guerreiro'){icon='⚔️';kind='melee';color='#ffd45d'}if(name.includes('cura')||name.includes('bênção')||name.includes('santuário')||name.includes('purificação')){icon='✨';kind='magic';color='#8dffbd'}let p=document.createElement('div');p.className='attackProjectile '+kind;p.textContent=icon;p.style.setProperty('--pc',color);battle.appendChild(p);
 let br=battle.getBoundingClientRect(),hr=runner.getBoundingClientRect(),mr=mob?.getBoundingClientRect();
 /* Coordenadas locais reais: .battle tem borda e o projétil absoluto usa padding-box.
@@ -2452,7 +2492,7 @@ function kingdomTownGo(t,el){
  kingdomTownBusy=true;el.classList.add('kingdomActivating');
  setTimeout(()=>{try{showTab(t)}finally{kingdomTownBusy=false}},420);
 }
-function showTab(t){try{rmJourneyAction(t)}catch(e){};setTimeout(()=>setMusicMode(),30);updateAudioButton();if(coopDungeonViewing&&t!=='dungeon'){toast('🚪 Use Sair / Resetar DG antes de trocar de tela.');t='dungeon'}if(t!=='dungeon'){document.getElementById('coopExitFloat')?.classList.add('hidden');coopDungeonViewing=null;if(coopDungeonTimer){clearInterval(coopDungeonTimer);coopDungeonTimer=null}if(coopAutoAttackTimer){clearInterval(coopAutoAttackTimer);coopAutoAttackTimer=null}}if(t!=='world'&&raidTimer){clearInterval(raidTimer);raidTimer=null}document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));if(t==='town'){renderKingdomTown();requestAnimationFrame(()=>{const town=document.querySelector('.kingdomActions');if(town){const y=window.scrollY+town.getBoundingClientRect().top-12;window.scrollTo({top:Math.max(0,y),behavior:'instant'});}});}if(t==='character')renderCharacter();if(t==='status')renderStatus();if(t==='bag')renderBag();if(t==='skills')renderSkills();if(t==='shop')renderShop();if(t==='summons')renderSummons();if(t==='dungeon')renderDungeon();if(t==='world')renderWorld();if(t==='ranking')renderRanking();if(t==='pvp')renderPvp();if(t==='chat')renderWorldChat();if(t==='admin')renderAdminPanel();if(t==='guild')renderGuild();if(t==='party')renderParty();if(t==='friends')renderFriends();if(t==='quests')renderQuests();if(t==='class')renderClass();if(t==='titles')renderTitles();if(t==='mail')renderMail();if(innerWidth<901){right.classList.remove('show')} }
+function showTab(t){rmLastGameTab=t;try{rmJourneyAction(t)}catch(e){};setTimeout(()=>setMusicMode(),30);updateAudioButton();if(coopDungeonViewing&&t!=='dungeon'){toast('🚪 Use Sair / Resetar DG antes de trocar de tela.');t='dungeon'}if(t!=='dungeon'){document.getElementById('coopExitFloat')?.classList.add('hidden');coopDungeonViewing=null;if(coopDungeonTimer){clearInterval(coopDungeonTimer);coopDungeonTimer=null}if(coopAutoAttackTimer){clearInterval(coopAutoAttackTimer);coopAutoAttackTimer=null}}if(t!=='world'&&raidTimer){clearInterval(raidTimer);raidTimer=null}document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));if(t==='town'){renderKingdomTown();requestAnimationFrame(()=>{const town=document.querySelector('.kingdomActions');if(town){const y=window.scrollY+town.getBoundingClientRect().top-12;window.scrollTo({top:Math.max(0,y),behavior:'instant'});}});}if(t==='character')renderCharacter();if(t==='status')renderStatus();if(t==='bag')renderBag();if(t==='skills')renderSkills();if(t==='shop')renderShop();if(t==='summons')renderSummons();if(t==='dungeon')renderDungeon();if(t==='world')renderWorld();if(t==='ranking')renderRanking();if(t==='pvp')renderPvp();if(t==='chat')renderWorldChat();if(t==='admin')renderAdminPanel();if(t==='guild')renderGuild();if(t==='party')renderParty();if(t==='friends')renderFriends();if(t==='quests')renderQuests();if(t==='class')renderClass();if(t==='titles')renderTitles();if(t==='mail')renderMail();if(innerWidth<901){right.classList.remove('show')} }
 function classStatGuide(){let guides={Arqueiro:'🏹 <b>Status principais do Arqueiro</b><br>🔮 <b>INT</b> — aumenta o dano mágico.<br>💨 <b>AGI</b> — aumenta a velocidade de ataque.',Guerreiro:'⚔️ <b>Status principais do Guerreiro</b><br>💪 <b>FOR/ATK</b> — aumenta o dano físico.<br>🛡️ <b>DEF</b> ou ❤️ <b>HP</b> — escolha entre mais resistência ou mais vida.',Assassino:'🗡️ <b>Status principais do Assassino</b><br>💪 <b>FOR/ATK</b> — aumenta o dano físico.<br>💨 <b>AGI</b> — favorece críticos e aumenta a velocidade de ataque.',Mago:'🧙 <b>Status principais do Mago</b><br>🔮 <b>INT</b> — aumenta o dano mágico e o MP.'};return guides[P?.cls]||''}
 function gearVisualIcon(slot,x){let map={Arma:'⚔️',Armadura:'🥋',Elmo:'🪖',Botas:'🥾',Anel:'💍'};if(slot==='Arma'){let n=String(x?.name||'').toLowerCase();if(n.includes('arco'))return '🏹';if(n.includes('cajado'))return '🪄';if(n.includes('adaga'))return '🗡️'}return map[slot]||'◇'}
 function enchantGlowClass(x){let e=Number(x?.enchant||0);return e>=20?'glow5':e>=15?'glow4':e>=10?'glow3':e>=5?'glow2':e>=1?'glow1':''}
