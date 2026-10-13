@@ -2339,10 +2339,12 @@ function desiredMusicMode(){
  if(document.body.classList.contains('login-mode')||document.body.classList.contains('select-mode'))return 'login';
  if(document.body.classList.contains('game-mode')){
   const arenaOpen=id=>{const el=document.getElementById(id);return !!el&&!el.classList.contains('hidden')};
+  // Boss dos estágios normais mantém a trilha de exploração.
+  // Música épica somente em DGs (inclusive EXP e Pet), Boss Mundial e DG da Guilda.
   if((typeof D!=='undefined'&&D?.active)||(typeof W!=='undefined'&&W?.active)||
      (typeof coopDungeonViewing!=='undefined'&&coopDungeonViewing)||
      arenaOpen('coopArena')||arenaOpen('raidArena')||
-     (typeof E!=='undefined'&&E&&(E.boss||E.dungeon||E.world||E.guild)))return 'battle';
+     (typeof E!=='undefined'&&E&&(E.dungeon||E.world||E.guild||E.coop)))return 'battle';
   return 'normal';
  }
  return 'login';
