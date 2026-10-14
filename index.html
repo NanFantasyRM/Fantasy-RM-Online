@@ -2277,7 +2277,7 @@ function archerSpriteAvatar(a,small=false){
 }
 const evo40ArtNames=['Arquimago','Cavaleiro Negro','Elementalista','Inquisidor','Lâmina Sombria','Mestre das Sombras','Paladino','Ranger','Sentinela','Sumo Sacerdote'];
 function subclassArtHtml(branch,mode='aparência',small=true){
-  const is40=evo40ArtNames.includes(branch);
+  const is40=evo40ArtNames.includes(branch)&&!(branch==='Ranger'&&(pendingClassEvolution?.name==='Ranger'&&pendingClassEvolution?.level===20||!(P?.classEvo40==='Ranger'&&P?.level>=40)));
   const valid=['Knight','Berserker','Ranger','Sniper','Rogue','Thief','Wizard','Cleric'];
   if(!is40&&!valid.includes(branch))return '';
   const file=is40?'assets/subclasses/lvl40/'+encodeURIComponent(branch+' subclasse lvl 40 '+(mode==='atk'?'ATK':'aparência')+'.png'):'subclasses/'+encodeURIComponent(branch+' '+(mode==='atk'?'atk':'aparência')+'.png');
