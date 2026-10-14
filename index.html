@@ -257,6 +257,16 @@ body.rmGuildBattleMode .battle .heroTitle{bottom:345px!important;top:auto!import
 #raidArena .coopBossInfo{left:4%!important;right:4%!important;bottom:12px!important}
 @media(max-width:650px){#raidArena .coopField{min-height:640px!important}#raidArena .coopParty{top:130px!important;grid-template-rows:repeat(2,175px)!important}#raidArena .coopPlayer{height:170px!important}#raidArena .coopAvatar{height:110px!important}#raidArena .coopAvatar .charSprite{height:108px!important}#raidArena .coopAvatar .charSprite>*,#raidArena .coopAvatar .charSprite img{height:108px!important;max-height:108px!important}#raidArena #raidBoss{top:150px!important;right:0!important;width:43%!important;max-width:43%!important;height:350px!important}}
 
+/* Raid proportions v2: six readable heroes versus colossal Azrathor */
+#raidArena .coopField{min-height:735px!important}
+#raidArena .coopParty{left:1.5%!important;top:155px!important;width:56%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,230px)!important;gap:5px!important;z-index:6!important}
+#raidArena .coopPlayer{height:225px!important;padding:2px!important;justify-content:flex-end!important}
+#raidArena .coopAvatar{height:170px!important;max-height:170px!important}
+#raidArena .coopAvatar .charSprite{height:168px!important;max-height:168px!important}
+#raidArena .coopAvatar .charSprite img,#raidArena .coopAvatar img.subclassArt,#raidArena .coopAvatar img.subclassArtSmall{height:165px!important;max-height:165px!important;width:100%!important;max-width:100%!important;object-fit:contain!important;object-position:center bottom!important;transform:none!important;position:static!important}
+#raidArena #raidBoss{top:112px!important;right:0!important;width:49%!important;max-width:49%!important;height:515px!important;z-index:4!important}
+#raidArena .coopBossInfo{bottom:12px!important;z-index:9!important}
+@media(max-width:650px){#raidArena .coopField{min-height:715px!important}#raidArena .coopParty{top:153px!important;grid-template-rows:repeat(2,215px)!important;width:57%!important;gap:2px!important}#raidArena .coopPlayer{height:210px!important}#raidArena .coopAvatar{height:145px!important;max-height:145px!important}#raidArena .coopAvatar .charSprite{height:143px!important;max-height:143px!important}#raidArena .coopAvatar .charSprite img,#raidArena .coopAvatar img.subclassArt,#raidArena .coopAvatar img.subclassArtSmall{height:140px!important;max-height:140px!important}#raidArena #raidBoss{top:140px!important;right:-1%!important;width:47%!important;max-width:47%!important;height:465px!important}}
 /* Azrathor - world raid arena */
 #raidArena .coopField{background:linear-gradient(0deg,#05040955,#09070918),url('assets/bosses/Fundo%20Boss%20mundial.png') center center/cover no-repeat!important;min-height:550px;overflow:hidden}
 #raidArena .coopMoon{display:none!important}
