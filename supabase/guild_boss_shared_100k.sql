@@ -55,7 +55,12 @@ begin
   end if;
   update public.guild_boss_state s set hp=v_hp,max_hp=v_max,boss_level=v_level,bosses_defeated=v_kills,
     updated_at=now(),defeated_at=case when v_defeated then now() else s.defeated_at end where s.guild_id=v_guild;
-  if v_dealt>0 then
+  -- Ao derrotar o Boss, o ranking do Boss anterior termina.
+  -- O golpe final conta para o Boss derrotado; em seguida o placar zera.
+  if v_defeated then
+    delete from public.guild_boss_damage d where d.guild_id=v_guild;
+  end if;
+  if v_dealt>0 and not v_defeated then
     insert into public.guild_boss_damage(guild_id,user_id,character_name,total_damage)
     values(v_guild,auth.uid(),left(coalesce(nullif(trim(p_character_name),''),'Aventureiro'),80),v_dealt)
     on conflict(guild_id,user_id) do update
