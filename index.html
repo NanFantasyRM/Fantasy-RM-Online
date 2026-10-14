@@ -242,6 +242,21 @@ body.rmGuildBattleMode .battle .heroTitle{bottom:345px!important;top:auto!import
 @media(max-width:900px){body.rmGuildBattleMode .battle{height:620px!important}body.rmGuildBattleMode .battle .runner,body.rmGuildBattleMode .battle .mob{bottom:215px!important}body.rmGuildBattleMode .battle .heroTitle{bottom:360px!important}body.rmGuildBattleMode .battle .bars{bottom:14px!important;width:calc(100% - 120px)!important}body.rmGuildBattleMode .battle .petFighter{bottom:255px!important}.rmGuildInstanceHeader{align-items:flex-start;flex-direction:column}.rmGuildInstanceHeader button{align-self:flex-end}}
 @media(max-width:420px){body.rmGuildBattleMode .battle{height:590px!important}body.rmGuildBattleMode .battle #dungeonLives{top:67px!important}body.rmGuildBattleMode .battle .runner,body.rmGuildBattleMode .battle .mob{bottom:205px!important}}
 
+/* World raid six-player formation: scoped only to raid */
+#raidArena .coopField{min-height:640px!important;position:relative}
+#raidArena .coopParty{position:absolute!important;top:125px!important;left:2%!important;width:54%!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,185px)!important;gap:7px!important;z-index:5!important;align-items:end!important}
+#raidArena .coopPlayer{position:relative!important;min-width:0!important;min-height:0!important;height:180px!important;padding:4px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-end!important;overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important;text-align:center!important;font-size:10px!important}
+#raidArena .coopPlayer.me{filter:drop-shadow(0 0 5px #53c6ff)}
+#raidArena .coopAvatar{width:100%!important;height:124px!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;overflow:visible!important;font-size:inherit!important}
+#raidArena .coopAvatar .charSprite{display:flex!important;align-items:flex-end!important;justify-content:center!important;width:100%!important;height:120px!important;transform:none!important;filter:drop-shadow(0 3px 4px #000b)}
+#raidArena .coopAvatar .charSprite>*,#raidArena .coopAvatar .charSprite img{max-width:100%!important;max-height:120px!important;width:auto!important;height:120px!important;object-fit:contain!important;object-position:center bottom!important;transform:none!important;margin:0!important;background-size:contain!important;background-position:center bottom!important}
+#raidArena .coopPlayer b{font-size:11px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 2px 4px #000}
+#raidArena .coopPlayer .coopMiniBar,#raidArena .coopPlayer .coopMpBar{width:95%!important;height:5px!important;margin-top:2px!important}
+#raidArena .coopPlayer .coopManaText,#raidArena .coopPlayer>div[style*="font-size"]{font-size:9px!important;line-height:1.1!important}
+#raidArena #raidBoss{position:absolute!important;left:auto!important;right:1%!important;top:135px!important;width:43%!important;height:365px!important;max-width:43%!important}
+#raidArena .coopBossInfo{left:4%!important;right:4%!important;bottom:12px!important}
+@media(max-width:650px){#raidArena .coopField{min-height:640px!important}#raidArena .coopParty{top:130px!important;grid-template-rows:repeat(2,175px)!important}#raidArena .coopPlayer{height:170px!important}#raidArena .coopAvatar{height:110px!important}#raidArena .coopAvatar .charSprite{height:108px!important}#raidArena .coopAvatar .charSprite>*,#raidArena .coopAvatar .charSprite img{height:108px!important;max-height:108px!important}#raidArena #raidBoss{top:150px!important;right:0!important;width:43%!important;max-width:43%!important;height:350px!important}}
+
 /* Azrathor - world raid arena */
 #raidArena .coopField{background:linear-gradient(0deg,#05040955,#09070918),url('assets/bosses/Fundo%20Boss%20mundial.png') center center/cover no-repeat!important;min-height:550px;overflow:hidden}
 #raidArena .coopMoon{display:none!important}
